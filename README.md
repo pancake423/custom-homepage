@@ -13,6 +13,12 @@ It includes:
 Serve this directory as a static website. The recommended way is with npx (comes with every [Node.js](https://nodejs.org/en/download) installation). In the terminal:
 
 ```bash
+# clone the repo.
+# (you could also download as a zip folder, extract, and open a terminal in that folder)
+git clone https://github.com/pancake423/custom-homepage.git
+cd custom-homepage
+
+# serve the static website
 npx serve public -p 51432 # choose a port number that you're unlikely to ever use again
 ```
 
