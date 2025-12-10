@@ -1,0 +1,29 @@
+{
+  "storagePrefix": "0-color-",
+  "colors": [
+    {
+      "name": "navbar-bg",
+      "category": "Navbar",
+      "display": "Background color",
+      "default": "rgba(0, 0, 0, 0.1)"
+    },
+    {
+      "name": "navbar-button-color",
+      "category": "Navbar",
+      "display": "Button color",
+      "default": "black"
+    },
+    {
+      "name": "navbar-button-color-hover",
+      "category": "Navbar",
+      "display": "Button color (hover)",
+      "default": "rgb(50, 50, 50)"
+    },
+    {
+      "name": "navbar-button-text",
+      "category": "Navbar",
+      "display": "Button text color",
+      "default": "white"
+    }
+  ]
+}
