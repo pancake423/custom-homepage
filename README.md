@@ -46,4 +46,4 @@ after it has been loaded once.
 
 # Attributions
 
-Icons by [Icons8](https://icons8.com)
+Icons from [Bootstrap](https://icons.getbootstrap.com/)
