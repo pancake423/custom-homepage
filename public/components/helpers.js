@@ -10,7 +10,7 @@
  *
  * @returns {Promise<HTMLElement>}
  */
-export default async function loadSVG(path, dynamicColor = false) {
+export async function loadSVG(path, dynamicColor = false) {
   // fetch the text contents of the svg file
   const svgText = await (await fetch(path)).text();
 
@@ -35,4 +35,28 @@ export default async function loadSVG(path, dynamicColor = false) {
     }
   }
   return svg;
+}
+
+const partialsCache = {};
+
+/**
+ * loads an HTML "partial" from the specified path (url).
+ *
+ * note that partials are cached, so subsequent calls won't make additional
+ * network requests
+ *
+ * @param {string} path - path to the HTML file.
+ * @param {bool} [wrap] - if true, wrap the contents of the file in a div. if false, assumes
+ * that your partial is already wrapped in a top-level div (or other containing element).
+ * @returns {Promise<HTMLElement>}
+ */
+export async function loadPartial(path, wrap = false) {
+  if (partialsCache[path] !== undefined) {
+    return partialsCache[path].cloneNode(true);
+  }
+  const container = document.createElement("div");
+  container.innerHTML = await (await fetch(path)).text();
+  partialsCache[path] = wrap ? container : container.childNodes[0];
+
+  return await loadPartial(path);
 }

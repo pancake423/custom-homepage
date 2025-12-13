@@ -1,6 +1,17 @@
 body {
     margin: 0;
     background-color: #303030;
+    overflow: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
 }
 
 :root {
@@ -64,6 +75,57 @@ body {
     bottom: var(--settings-offset);
     width: var(--icon-size);
     height: var(--icon-size);
-    color: white;
+    color: var(--settings-gear-color);
     cursor: pointer;
+}
+
+.settings-blocker {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.settings-page {
+    background-color: white;
+    border-radius: 0.5rem;
+    position: absolute;
+    left: 50vw;
+    top: 50vh;
+    width: calc(min(80vw, 60vh));
+    height: 80vh;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 1rem;
+    cursor: default;
+}
+
+.settings-container {
+    width: 100cqw;
+    box-sizing: border-box;
+    padding: 1rem;
+}
+
+.settings-caret {
+    width: 1rem;
+    height: 1rem;
+    transition-duration: 0.25s;
+}
+
+.settings-caret-rotated {
+    transform: rotate(90deg);
+}
+
+.settings-section-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+}
+
+.settings-hidden {
+    display: none;
 }

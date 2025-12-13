@@ -24,6 +24,12 @@
       "category": "Navbar",
       "display": "Button text color",
       "default": "white"
+    },
+    {
+      "name": "settings-gear-color",
+      "category": "Navbar",
+      "display": "Settings gear color",
+      "default": "white"
     }
   ]
 }

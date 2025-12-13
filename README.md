@@ -46,4 +46,4 @@ after it has been loaded once.
 
 # Attributions
 
-Icons from [Bootstrap](https://icons.getbootstrap.com/)
+Icons from [Bootstrap](https://icons.getbootstrap.com/) and [SVGRepo](https://www.svgrepo.com/)
