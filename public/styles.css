@@ -104,7 +104,6 @@ p {
 }
 
 .settings-container {
-    width: 100cqw;
     box-sizing: border-box;
     padding: 1rem;
 }
@@ -128,4 +127,32 @@ p {
 
 .settings-hidden {
     display: none;
+}
+
+.settings-color-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #eee;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    margin-block: 1rem;
+}
+
+.settings-color-reset {
+    background-color: #fc3333;
+    color: white;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    padding: 1rem;
+    border: none;
+    outline: none;
+    margin-block: 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.settings-color-reset:hover {
+    background-color: #e23333;
 }

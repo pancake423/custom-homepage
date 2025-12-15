@@ -1,0 +1,21 @@
+{
+  "name": "custom-homepage",
+  "version": "1.0.0",
+  "description": "A custom browser homepage with quick links, notes, and a highly customizable color scheme.",
+  "homepage": "https://github.com/pancake423/custom-homepage#readme",
+  "bugs": {
+    "url": "https://github.com/pancake423/custom-homepage/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pancake423/custom-homepage.git"
+  },
+  "license": "ISC",
+  "author": "William Jackson",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx serve public -p 51432"
+  }
+}

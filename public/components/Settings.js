@@ -15,6 +15,53 @@ async function addSection(parent, name) {
   return items;
 }
 
+async function initColorSettings(colors) {
+  // add contents to colors page
+  // 1. group colors by category
+  const categories = {};
+  for (const info of ColorManager.data) {
+    if (categories[info.category] == undefined) {
+      categories[info.category] = [];
+    }
+    categories[info.category].push(info);
+  }
+  // 2. add each category as a subsection, and fill the color info
+  for (const category of Object.keys(categories)) {
+    const sect = await addSection(colors, category);
+    for (const info of categories[category]) {
+      const node = document.createElement("div");
+      node.classList.add("settings-color-box");
+      const label = document.createElement("label");
+      label.for = info.name;
+      label.innerText = info.display;
+      const picker = document.createElement("input");
+      picker.type = "color";
+      picker.id = info.name;
+      picker.value = ColorManager.get(info.name);
+      picker.onchange = () => {
+        ColorManager.set(info.name, picker.value);
+      };
+      node.appendChild(label);
+      node.appendChild(picker);
+      sect.appendChild(node);
+    }
+  }
+  // 3. add a "reset all" button to the bottom of the page
+  const btn = document.createElement("button");
+  btn.innerText = "Reset All";
+  btn.classList.add("settings-color-reset");
+  btn.onclick = () => {
+    if (!confirm("Reset color scheme to default? This can't be undone."))
+      return;
+    ColorManager.reset();
+    // make sure that displayed colors stay synced
+    for (const input of colors.querySelectorAll("input")) {
+      input.value = ColorManager.get(input.id);
+    }
+  };
+  colors.appendChild(btn);
+}
+
 export default class Settings {
   static async construct() {
     const s = new Settings();
@@ -31,24 +78,7 @@ export default class Settings {
     const notes = await addSection(parent, "Notes Page");
     const colors = await addSection(parent, "Color Scheme");
 
-    // add contents to colors page
-    // 1. group colors by category
-    const categories = {};
-    for (const info of ColorManager.data) {
-      if (categories[info.category] == undefined) {
-        categories[info.category] = [];
-      }
-      categories[info.category].push(info);
-    }
-    // 2. add each category as a subsection, and fill the color info
-    for (const category of Object.keys(categories)) {
-      const sect = await addSection(colors, category);
-      for (const info of categories[category]) {
-        const node = document.createElement("p");
-        node.innerText = info.display;
-        sect.appendChild(node);
-      }
-    }
+    initColorSettings(colors);
 
     s.icon.onclick = () => {
       s.page.classList.toggle("settings-hidden");
