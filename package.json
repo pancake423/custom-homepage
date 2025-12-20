@@ -12,10 +12,14 @@
   },
   "license": "ISC",
   "author": "William Jackson",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx serve public -p 51432"
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "node-libcurl": "^5.0.1"
   }
 }

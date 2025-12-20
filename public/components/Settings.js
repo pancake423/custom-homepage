@@ -78,7 +78,7 @@ export default class Settings {
     const notes = await addSection(parent, "Notes Page");
     const colors = await addSection(parent, "Color Scheme");
 
-    initColorSettings(colors);
+    await initColorSettings(colors);
 
     s.icon.onclick = () => {
       s.page.classList.toggle("settings-hidden");

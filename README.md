@@ -1,6 +1,6 @@
 # About
 
-This project is a static offline-usable website designed to be used as a browser homepage.
+A small website designed to be locally hosted and used as a browser homepage.
 
 It includes:
 - a customizable links page for quickly navigating to frequently used websites
@@ -10,7 +10,7 @@ It includes:
 # Installing
 
 ## 1.
-Serve this directory as a static website. The recommended way is with npx (comes with every [Node.js](https://nodejs.org/en/download) installation). In the terminal:
+TODO: update this now that the site is no longer static :)
 
 ```bash
 # clone the repo.
@@ -18,8 +18,10 @@ Serve this directory as a static website. The recommended way is with npx (comes
 git clone https://github.com/pancake423/custom-homepage.git
 cd custom-homepage
 
-# serve the static website
-npx serve public -p 51432 # choose a port number that you're unlikely to ever use again
+# download project dependencies
+npm install
+
+# use pm2 to run this application on startup
 ```
 
 ## 2.
@@ -39,10 +41,6 @@ go to `chrome://settings/appearance`. turn on "show home button", and set it to 
 ### Other Browsers
 
  Most (all?) browsers support custom homepages. Look up specific instructions online if you're having trouble.
-
-## 3.
-Visit your new homepage at least once before closing the terminal. The page has a service worker that will let it run offline
-after it has been loaded once.
 
 # Attributions
 
