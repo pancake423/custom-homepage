@@ -21,7 +21,16 @@ cd custom-homepage
 # download project dependencies
 npm install
 
-# use pm2 to run this application on startup
+# use pm2 to run this application on startup (linux)
+# see pm2-installer (https://github.com/jessety/pm2-installer) on windows
+npm install pm2 -g
+pm2 startup # make sure to run the command it generates...
+
+# start the app
+pm2 run index.js --name custom-homepage
+
+# relaunch the currently running apps on startup
+pm2 save
 ```
 
 ## 2.
