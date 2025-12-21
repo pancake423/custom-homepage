@@ -12,11 +12,13 @@ window.ObjectStore = ObjectStore;
 window.addEventListener("DOMContentLoaded", async () => {
   await ColorManager.load();
 
-  const homepage = new LinksPage();
-  window.homepage = homepage;
+  const settings = await Settings.construct();
+
+  const homepage = new LinksPage(settings.links);
   const notes = new Page("Notes");
 
   const navbar = new Navbar(homepage, notes);
+  await homepage.loadPageSettings();
 
-  const settings = Settings.construct();
+  window.homepage = homepage;
 });

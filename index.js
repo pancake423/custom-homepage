@@ -1,5 +1,6 @@
 import express from "express";
 import { curly } from "node-libcurl";
+import { parseFaviconURL, parseTitle } from "./src/parser.js";
 
 const PORT = 51432;
 const app = express();
@@ -9,21 +10,19 @@ app.use(express.json());
 
 app.post("/api/generateLink", async (req, res) => {
   const { data } = await curly.get(req.body.url, { followLocation: 1 });
-  const links = String(data)
-    .match(/<link.*?>/gms)
-    .filter((v) => v.match(/rel\s?=\s?['"]icon["']/gm));
+  const rep = await curly.get(parseFaviconURL(data, req.body.url));
+  const headers = rep.headers[0];
+  const base64url =
+    "data:" +
+    headers["content-type"] +
+    ";base64," +
+    rep.data.toString("base64");
 
-  // choose the highest resolution, if specified.
-  // if not, choose the first one.
-  let max_res = 0;
-  let max_href = null;
-  let max_id = 0;
-  for (const link of links) {
-    const href = link.match(/href\s?=\s?['"].*?["']/gm);
-    const sizes = link.match(/sizes\s?=\s?['"].*?["']/gm);
-    if (href.length !== 1)
-      throw new Error(`no href defined in icon tag. (${link})`);
-  }
+  res.send({
+    thumbnail: base64url,
+    title: parseTitle(data),
+    url: req.body.url,
+  });
 });
 
 app.listen(PORT, () =>

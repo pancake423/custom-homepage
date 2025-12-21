@@ -74,8 +74,8 @@ export default class Settings {
     document.body.appendChild(s.page);
 
     const parent = s.page.querySelector(".settings-container");
-    const links = await addSection(parent, "Links Page");
-    const notes = await addSection(parent, "Notes Page");
+    s.links = await addSection(parent, "Links Page");
+    s.notes = await addSection(parent, "Notes Page");
     const colors = await addSection(parent, "Color Scheme");
 
     await initColorSettings(colors);
