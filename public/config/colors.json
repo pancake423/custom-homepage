@@ -30,6 +30,18 @@
       "category": "Navbar",
       "display": "Settings gear color",
       "default": "#ffffff"
+    },
+    {
+      "name": "links-bg-color",
+      "category": "Links",
+      "display": "Background Color",
+      "default": "#333333"
+    },
+    {
+      "name": "links-text-color",
+      "category": "Links",
+      "display": "Text Color",
+      "default": "#ffffff"
     }
   ]
 }

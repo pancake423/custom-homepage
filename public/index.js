@@ -19,6 +19,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const navbar = new Navbar(homepage, notes);
   await homepage.loadPageSettings();
+  navbar.navigate(homepage);
 
   window.homepage = homepage;
 });

@@ -65,7 +65,7 @@ async function initColorSettings(colors) {
 export default class Settings {
   static async construct() {
     const s = new Settings();
-    s.icon = await loadSVG("/assets/flower.svg", true);
+    s.icon = await loadSVG("/assets/icons/flower.svg", true);
     s.icon.classList.add("settings-icon");
     s.icon.title = "Settings";
     document.body.appendChild(s.icon);

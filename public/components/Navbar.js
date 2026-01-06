@@ -3,7 +3,6 @@ navbar/tab bar for switching between applications.
 */
 
 import Page from "./Page.js";
-import ColorManager from "./ColorManager.js";
 
 export default class Navbar {
   /**

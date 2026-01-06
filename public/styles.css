@@ -1,7 +1,13 @@
+@font-face {
+    font-family: "Nunito";
+    src: url("/assets/fonts/Nunito-VariableFont_wght.ttf");
+}
+
 body {
     margin: 0;
     background-color: #303030;
     overflow: hidden;
+    font-family: "Nunito";
 }
 
 h1,
@@ -192,6 +198,13 @@ p {
     cursor: pointer;
 }
 
+.settings-link-edit {
+    width: 1.5rem;
+    height: 1.5rem;
+    justify-self: flex-end;
+    cursor: pointer;
+}
+
 .settings-link-input {
     border-radius: 0.5rem;
     background-color: #ddd;
@@ -216,4 +229,37 @@ p {
 .settings-link-blocked {
     cursor: not-allowed;
     opacity: 0.25;
+}
+
+.links-container {
+    position: absolute;
+    left: 10vw;
+    top: calc(10vh - (var(--navbar-height) / 2));
+    display: flex;
+    flex-direction: row;
+    width: 80vw;
+    height: 80vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.links-container div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 8rem;
+    cursor: pointer;
+}
+
+.links-container div img {
+    width: 4rem;
+    height: 4rem;
+}
+.links-container div p {
+    color: var(--links-text-color);
+}
+
+.links-page {
+    background-color: var(--links-bg-color);
 }

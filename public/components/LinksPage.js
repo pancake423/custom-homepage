@@ -4,26 +4,36 @@ import ObjectStore from "./ObjectStore.js";
 
 const LINKS_STORAGE_KEY = "links";
 
-async function settingsLinkRow(parent, data, storage, key) {
-  const row = await loadPartial("/partials/settings-link-item.html");
-  row.querySelector(".settings-link-thumbnail").src = data.thumbnail;
-  row.querySelector(".settings-link-name").innerHTML =
-    `${data.title} (<a href=${data.url} target="_blank">${data.url}</a>)`;
-  const btn = row.querySelector(".settings-link-delete");
-  btn.onclick = () => {
-    row.remove();
-    storage.delete(key);
-  };
-  parent.appendChild(row);
-}
-
 export default class LinksPage extends Page {
   constructor(settingsDiv) {
     super("Home");
+    this.base.classList.add("links-page");
     // links should be an array of objects.
     // each object will be: {title: str, thumbnail: base64 image, url: string}
     this.links = new ObjectStore(LINKS_STORAGE_KEY);
     this.settingsDiv = settingsDiv;
+  }
+
+  async settingsLinkRow(parent, data, storage, key) {
+    const row = await loadPartial("/partials/settings-link-item.html");
+    row.querySelector(".settings-link-thumbnail").src = data.thumbnail;
+    row.querySelector(".settings-link-name").innerHTML =
+      `${data.title} (<a href=${data.url} target="_blank">${data.url}</a>)`;
+    const delbtn = row.querySelector(".settings-link-delete");
+    delbtn.onclick = () => {
+      row.remove();
+      storage.delete(key);
+      this.loadPageSettings();
+    };
+    const editbtn = row.querySelector(".settings-link-edit");
+    editbtn.onclick = () => {
+      const name = prompt("Enter a new title for this link:", data.title);
+      if (name == null || name == "") return;
+      data.title = name;
+      storage.set(key, data);
+      this.loadPageSettings();
+    };
+    parent.appendChild(row);
   }
 
   async loadPageSettings() {
@@ -31,7 +41,7 @@ export default class LinksPage extends Page {
     d.innerHTML = "";
     for (const key of Object.keys(this.links.getAll())) {
       const data = this.links.get(key);
-      await settingsLinkRow(d, data, this.links, key);
+      await this.settingsLinkRow(d, data, this.links, key);
     }
     const create = await loadPartial("/partials/settings-link-create.html");
     const btn = create.querySelector(".settings-link-create");
@@ -45,6 +55,30 @@ export default class LinksPage extends Page {
       btn.classList.remove("settings-link-blocked");
     };
     d.appendChild(create);
+
+    // create the actual settings icon elements on the page
+    this.base.innerHTML = "";
+    const container = document.createElement("div");
+    container.classList.add("links-container");
+    for (const key of Object.keys(this.links.getAll())) {
+      const data = this.links.get(key);
+      const div = document.createElement("div");
+      const img = document.createElement("img");
+      const p = document.createElement("p");
+      img.src = data.thumbnail;
+      p.innerText = data.title;
+      div.appendChild(img);
+      div.appendChild(p);
+      div.onclick = () =>
+        open(
+          data.url.startsWith("http") ? data.url : "https://" + data.url,
+          "_blank",
+        );
+      div.title = data.url;
+      container.appendChild(div);
+    }
+
+    this.base.appendChild(container);
   }
 
   async addLink(url) {
