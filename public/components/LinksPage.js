@@ -49,7 +49,14 @@ export default class LinksPage extends Page {
       const input = create.querySelector(".settings-link-input");
       btn.classList.add("settings-link-blocked");
       btn.innerText = "loading...";
-      await this.addLink(input.value);
+      try {
+        await this.addLink(input.value);
+      } catch (e) {
+        console.log(e);
+        alert(
+          "This feature is unavailable because the server is unreachable (either you're offline or the server is down). Please try again later.",
+        );
+      }
       input.value = "";
       btn.innerText = "create";
       btn.classList.remove("settings-link-blocked");
