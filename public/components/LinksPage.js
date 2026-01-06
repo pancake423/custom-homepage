@@ -66,7 +66,7 @@ export default class LinksPage extends Page {
       const img = document.createElement("img");
       const p = document.createElement("p");
       img.src = data.thumbnail;
-      p.innerText = data.title;
+      p.innerText = data.title.trim();
       div.appendChild(img);
       div.appendChild(p);
       div.onclick = () =>
