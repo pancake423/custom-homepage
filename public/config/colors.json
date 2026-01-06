@@ -34,13 +34,19 @@
     {
       "name": "links-bg-color",
       "category": "Links",
-      "display": "Background Color",
+      "display": "Background color",
       "default": "#333333"
     },
     {
       "name": "links-text-color",
       "category": "Links",
-      "display": "Text Color",
+      "display": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "name": "links-icon-bg",
+      "category": "Links",
+      "display": "Icon background color",
       "default": "#ffffff"
     }
   ]

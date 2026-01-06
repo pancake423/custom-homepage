@@ -253,11 +253,15 @@ p {
     min-width: 8rem;
     cursor: pointer;
     padding: 1rem;
+    box-sizing: border-box;
 }
 
 .links-container div img {
-    width: 4rem;
-    height: 4rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0.5rem solid var(--links-icon-bg);
+    border-radius: 1rem;
+    background-color: var(--links-icon-bg);
 }
 .links-container div p {
     color: var(--links-text-color);
