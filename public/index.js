@@ -4,12 +4,14 @@ import ColorManager from "./components/ColorManager.js";
 import Settings from "./components/Settings.js";
 import ObjectStore from "./components/ObjectStore.js";
 import LinksPage from "./components/LinksPage.js";
+import { registerServiceWorker } from "./components/helpers.js";
 
 // debug helper: make classes available from console
 window.ColorManager = ColorManager;
 window.ObjectStore = ObjectStore;
 
 window.addEventListener("DOMContentLoaded", async () => {
+  await registerServiceWorker();
   await ColorManager.load();
 
   const settings = await Settings.construct();

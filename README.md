@@ -1,6 +1,6 @@
 # About
 
-A small website designed to be locally hosted and used as a browser homepage.
+A small website designed to mostly work offline, used as a browser homepage.
 
 It includes:
 - a customizable links page for quickly navigating to frequently used websites
@@ -10,7 +10,7 @@ It includes:
 # Installing
 
 ## 1.
-TODO: update this now that the site is no longer static :)
+TODO: update this now that it's hosted on my website
 
 ```bash
 # clone the repo.
@@ -27,7 +27,7 @@ npm install pm2 -g
 pm2 startup # make sure to run the command it generates...
 
 # start the app
-pm2 run index.js --name custom-homepage
+pm2 start index.js --name custom-homepage
 
 # relaunch the currently running apps on startup
 pm2 save
