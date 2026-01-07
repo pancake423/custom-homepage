@@ -98,11 +98,12 @@ export default class LinksPage extends Page {
     });
     if (res.status !== 200) {
       alert(
-        `could not find website with URL '${url}'. Check for typos or internet connection issues..`,
+        `could not find website with URL '${url}'. Check for typos or issues with the website..`,
       );
       return;
     }
     const data = await res.json();
+    console.log(data);
     this.links.save(data);
     await this.loadPageSettings();
   }

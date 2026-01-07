@@ -6,10 +6,6 @@ import ObjectStore from "./components/ObjectStore.js";
 import LinksPage from "./components/LinksPage.js";
 import { registerServiceWorker } from "./components/helpers.js";
 
-// debug helper: make classes available from console
-window.ColorManager = ColorManager;
-window.ObjectStore = ObjectStore;
-
 window.addEventListener("DOMContentLoaded", async () => {
   await registerServiceWorker();
   await ColorManager.load();
