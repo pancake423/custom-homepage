@@ -91,7 +91,7 @@ export default class LinksPage extends Page {
   async addLink(url) {
     // fetch the page
     // get its title and favicon
-    const res = await fetch("/api/generateLink", {
+    const res = await fetch("/api/getFavicon", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url: url }),

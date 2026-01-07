@@ -146,3 +146,27 @@ export async function getSiteInfo(url) {
   if (thumbnail == null) thumbnail = FALLBACK_URL;
   return { title: title || url, url: valid_url, thumbnail, error: null };
 }
+
+/**
+ * fast method for getting just the favicon of a website.
+ *
+ * @param {string} url
+ * @returns {Promise<string>} base64 encoded url, or path to fallback favicon.
+ */
+export async function getFavicon(url) {
+  try {
+    const valid_url = new URL(url.startsWith("http") ? url : "https://" + url);
+    const favicon_urls = [
+      `https://www.google.com/s2/favicons?domain=${valid_url.protocol + "//" + valid_url.host}&sz=128`,
+      `https://icons.duckduckgo.com/ip3/${valid_url.host}.ico`,
+    ];
+
+    for (const fv of favicon_urls) {
+      const res = await getFaviconFrom(fv);
+      if (res !== null) {
+        return res;
+      }
+    }
+  } catch {}
+  return FALLBACK_URL;
+}

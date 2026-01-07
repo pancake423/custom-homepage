@@ -1,5 +1,5 @@
 import express from "express";
-import { getSiteInfo } from "./src/parser.js";
+import { getSiteInfo, getFavicon } from "./src/parser.js";
 import { PORT } from "./src/env.js";
 
 const app = express();
@@ -14,6 +14,11 @@ app.post("/api/generateLink", async (req, res) => {
   } else {
     res.status(404).json(info);
   }
+});
+
+app.post("/api/getFavicon", async (req, res) => {
+  const favicon = await getFavicon(req.body.url);
+  res.json({ url: req.body.url, thumbnail: favicon, title: req.body.url });
 });
 
 app.listen(PORT, () =>
