@@ -4,37 +4,36 @@ A small website designed to mostly work offline, used as a browser homepage.
 
 It includes:
 - a customizable links page for quickly navigating to frequently used websites
-- a notes app
+- a notes app (coming soon)
 - highly customizable color schemes
 
-# Installing
+# Usage
 
-## 1.
-TODO: update this now that it's hosted on my website
+This project is hosted on my personal website at https://homepage.wxj.me.
+feel free to bookmark that page to use as a homepage (see **Setting a homepage** below)
+
+## Development/Local install
+If you want to run the site locally, or want to develop it, follow these instructions.
 
 ```bash
 # clone the repo.
-# (you could also download as a zip folder, extract, and open a terminal in that folder)
 git clone https://github.com/pancake423/custom-homepage.git
 cd custom-homepage
 
 # download project dependencies
 npm install
 
-# use pm2 to run this application on startup (linux)
-# see pm2-installer (https://github.com/jessety/pm2-installer) on windows
-npm install pm2 -g
-pm2 startup # make sure to run the command it generates...
+# start the development server.
+npm run start
 
-# start the app
-pm2 start index.js --name custom-homepage
-
-# relaunch the currently running apps on startup
-pm2 save
+# you could also set up the server to run on startup with pm2 or a similar service.
 ```
 
-## 2.
-In your browser settings, find the homepage settings and set it to the custom url from above (http://localhost:51432).
+the development server runs at http://localhost:51432. If you need a
+different port, it can be changed in `/src/env.js`.
+
+## Setting a homepage
+In your browser settings, find the homepage settings and set it to the url from above (https://homepage.wxj.me, or http://localhost:51432 for local development).
 
 ### Firefox
 go to `about:preferences#home`.
