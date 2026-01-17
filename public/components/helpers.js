@@ -82,3 +82,16 @@ export async function registerServiceWorker() {
     }
   }
 }
+
+/**
+ * truncates a string.
+ *
+ * @param {String} s - the string to truncate
+ * @param {Number} maxLen - the maximum allowed length. defaults to 50.
+ * @param {Number} elipses - number of elipses to append if truncating. defaults to 3.
+ * @returns {String} the truncated string
+ */
+export function truncate(s, maxLen = 50, elipses = 3) {
+  if (s.length <= maxLen) return s;
+  return s.slice(0, maxLen - elipses) + ".".repeat(elipses);
+}

@@ -48,6 +48,24 @@
       "category": "Links",
       "display": "Icon background color",
       "default": "#ffffff"
+    },
+    {
+      "name": "links-clock-color",
+      "category": "Links",
+      "display": "Clock color (lit segments)",
+      "default": "#ffffff"
+    },
+    {
+      "name": "links-clock-shadow",
+      "category": "Links",
+      "display": "Clock color (unlit segments)",
+      "default": "#303030"
+    },
+    {
+      "name": "links-clock-bg",
+      "category": "Links",
+      "display": "Clock background color",
+      "default": "#000000"
     }
   ]
 }

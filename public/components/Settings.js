@@ -83,6 +83,8 @@ export default class Settings {
     s.icon.onclick = () => {
       s.page.classList.toggle("settings-hidden");
     };
+    s.page.querySelector(".settings-close").onclick = () =>
+      s.page.classList.toggle("settings-hidden");
     s.page.onclick = (e) => {
       if (e.target == s.page) {
         s.page.classList.toggle("settings-hidden");
