@@ -4,6 +4,7 @@ import ColorManager from "./components/ColorManager.js";
 import Settings from "./components/Settings.js";
 import LinksPage from "./components/LinksPage.js";
 import { registerServiceWorker } from "./components/helpers.js";
+import DuckGame from "./components/DuckGame.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
   await registerServiceWorker();
@@ -12,11 +13,14 @@ window.addEventListener("DOMContentLoaded", async () => {
   const settings = await Settings.construct();
 
   const homepage = new LinksPage(settings.links);
+  const game = new DuckGame(homepage.base);
+  await game.init();
+
   const notes = new Page("Notes");
 
   const navbar = new Navbar(homepage, notes);
   await homepage.loadPageSettings();
   navbar.navigate(homepage);
 
-  window.homepage = homepage;
+  window.game = game;
 });

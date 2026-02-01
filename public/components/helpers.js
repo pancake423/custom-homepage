@@ -95,3 +95,33 @@ export function truncate(s, maxLen = 50, elipses = 3) {
   if (s.length <= maxLen) return s;
   return s.slice(0, maxLen - elipses) + ".".repeat(elipses);
 }
+
+/**
+ * substring function with support for negative indices.
+ *
+ * @param {string} s - string to take substring from.
+ * @param {number} start- index of the beginning of the substring.
+ * @param {number} end- index of the end of the substring. The character at this position is not included.
+ * @returns {string}
+ */
+export function substring(s, start, end) {
+  const start_actual = start >= 0 ? start : s.length + start;
+  const end_actual = end >= 0 ? end : s.length + end;
+
+  return s.substring(start_actual, end_actual);
+}
+
+/**
+ * loads a texture to an image bitmap.
+ *
+ * @param {string} texturePath- path to the texture (image) file.
+ * @returns {Promise<ImageBitmap>}
+ */
+export async function loadImageBitmap(texturePath) {
+  const res = await fetch(texturePath);
+  const data = URL.createObjectURL(await res.blob());
+  const img = new Image();
+  img.src = data;
+  await img.decode();
+  return await createImageBitmap(img);
+}
