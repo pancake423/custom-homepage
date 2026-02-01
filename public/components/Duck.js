@@ -10,12 +10,13 @@ const RUN_SPEED = 1000;
 const FRICTION = 300;
 const GRAVITY = 1000;
 
-const MAX_VEL_X = 10000;
+const MAX_VEL_X = 1000;
 const MAX_VEL_Y = 1000;
 
 const TOP_SPEED = 500;
 
-let MAX_CLIMB_PX = 10;
+let MAX_CLIMB_PX = 20;
+let MIN_FPS = 60; // act like 60fps even if we dip lower (so physics don't break)
 
 const ELASTICITY = 0.8;
 
@@ -45,7 +46,7 @@ export default class Duck extends Sprite {
   update() {
     this.rider = null;
     const now = Date.now();
-    this.dt = Math.min((now - this.t0) / 1000, 1 / 30); // maximum step size is 1/30th second (so physics don't break)
+    this.dt = Math.min((now - this.t0) / 1000, 1 / MIN_FPS);
     this.t0 = now;
     if (this.flapAnim > 0) {
       this.flapAnim += this.dt * ANIM_SPEED;
