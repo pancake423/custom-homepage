@@ -34,7 +34,7 @@ export default class JettyJeeve extends Canvas {
    */
   constructor(duckGameInstance) {
     super(document.body);
-    this.base.className = "jj-base hidden";
+    this.base.className = "jj-base jj-hidden";
     // save duck game instance to toggle it to pause when jetty jeeve is playing
     this.duckGameInstance = duckGameInstance;
 
@@ -162,7 +162,7 @@ export default class JettyJeeve extends Canvas {
     if (this.running) {
       this.reset();
     }
-    this.base.classList.toggle("hidden");
+    this.base.classList.toggle("jj-hidden");
   }
 
   loop() {
