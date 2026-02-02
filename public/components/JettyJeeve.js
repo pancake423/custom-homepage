@@ -91,7 +91,7 @@ export default class JettyJeeve extends Canvas {
 
     this.resize();
     this.jeeve.scaleWidth(125);
-    this.jeeve.size = Vec2.scale(this.jeeve.size, 0.9);
+    this.jeeve.size = Vec2.scale(this.jeeve.size, 0.8);
     this.jeeve.floorEnabled = false;
     this.resizeTo((this.width / this.height) * 1000, 1000);
     window.addEventListener("resize", () => {
