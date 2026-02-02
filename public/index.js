@@ -5,6 +5,7 @@ import Settings from "./components/Settings.js";
 import LinksPage from "./components/LinksPage.js";
 import { registerServiceWorker } from "./components/helpers.js";
 import DuckGame from "./components/DuckGame.js";
+import JettyJeeve from "./components/JettyJeeve.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
   await registerServiceWorker();
@@ -16,11 +17,13 @@ window.addEventListener("DOMContentLoaded", async () => {
   const game = new DuckGame(homepage.base);
   await game.init();
 
+  const jj = new JettyJeeve(game);
+  await jj.init();
   const notes = new Page("Notes");
 
   const navbar = new Navbar(homepage, notes);
   await homepage.loadPageSettings();
   navbar.navigate(homepage);
 
-  window.game = game;
+  window.jj = jj;
 });

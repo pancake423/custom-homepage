@@ -343,3 +343,14 @@ p {
     width: 100vw;
     pointer-events: none;
 }
+
+.jj-base {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1002;
+    pointer-events: none;
+    background-color: #1b1738;
+}

@@ -30,6 +30,7 @@ export default class Duck extends Sprite {
     this.mass = 1;
     this.onFloor = false;
     this.rider = null;
+    this.floorEnabled = true;
     this.passenger = null;
     this.size = new Vec2(this.size.x, this.size.y * 0.86);
     this.displayOffset = new Vec2(0, this.displaySize.y * -0.07);
@@ -43,17 +44,7 @@ export default class Duck extends Sprite {
     return 0.5 * Math.cos(2 * Math.PI * this.flapAnim) + 0.5;
   }
 
-  update() {
-    this.rider = null;
-    const now = Date.now();
-    this.dt = Math.min((now - this.t0) / 1000, 1 / MIN_FPS);
-    this.t0 = now;
-    if (this.flapAnim > 0) {
-      this.flapAnim += this.dt * ANIM_SPEED;
-    }
-    if (this.flapAnim > 1) {
-      this.flapAnim = 0;
-    }
+  updateFeet() {
     // set the position of the feet based on flapAnim
     // assume flapAnim increases linearly from 0 to 1, then gets reset to 0.
     // so flapAnim = 0 and flapAnim = 1 should look the same.
@@ -67,6 +58,20 @@ export default class Duck extends Sprite {
       (this.displaySize.x / 2) * Math.cos(baseAngle - offset),
       (this.displaySize.y / 2) * Math.sin(baseAngle - offset),
     );
+  }
+
+  update() {
+    this.rider = null;
+    const now = Date.now();
+    this.dt = Math.min((now - this.t0) / 1000, 1 / MIN_FPS);
+    this.t0 = now;
+    if (this.flapAnim > 0) {
+      this.flapAnim += this.dt * ANIM_SPEED;
+    }
+    if (this.flapAnim > 1) {
+      this.flapAnim = 0;
+    }
+    this.updateFeet();
 
     this.vel.y += this.dt * GRAVITY;
     this.pos.x += this.dt * this.vel.x;
@@ -85,11 +90,13 @@ export default class Duck extends Sprite {
     }
 
     this.onFloor = false;
-    if (this.pos.y > 1000 - this.size.y / 2) {
-      this.pos.y = 1000 - this.size.y / 2;
-      if (this.vel.y > 0) {
-        this.vel.y = 0;
-        this.onFloor = true;
+    if (this.floorEnabled) {
+      if (this.pos.y > 1000 - this.size.y / 2) {
+        this.pos.y = 1000 - this.size.y / 2;
+        if (this.vel.y > 0) {
+          this.vel.y = 0;
+          this.onFloor = true;
+        }
       }
     }
 
@@ -113,7 +120,10 @@ export default class Duck extends Sprite {
   }
 
   jump() {
-    this.vel.y = -JUMP_HEIGHT;
+    if (this.vel.y > 0) {
+      this.vel.y = 0;
+    }
+    this.vel.y -= JUMP_HEIGHT;
     this.flap();
   }
 

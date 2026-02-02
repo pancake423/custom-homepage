@@ -3,13 +3,10 @@ import Duck from "./Duck.js";
 import { loadImageBitmap, loadSVG } from "./helpers.js";
 import Vec2 from "./Vec2.js";
 
-const PLAYGROUND_MODE = 0;
-const FLAPPY_BIRD_MODE = 1;
-
 export default class DuckGame extends Canvas {
   constructor(parent) {
     super(parent);
-    this.mode = PLAYGROUND_MODE;
+    this.active = true;
     this.a = false;
     this.d = false;
     this.leftArrow = false;
@@ -41,6 +38,7 @@ export default class DuckGame extends Canvas {
     this.jeeve.mass = 1.5;
     this.scaleDucks();
     addEventListener("keydown", (e) => {
+      if (!this.active) return;
       switch (e.code) {
         case "KeyW":
           this.steve.jump();
