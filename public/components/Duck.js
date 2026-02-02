@@ -121,9 +121,10 @@ export default class Duck extends Sprite {
 
   jump() {
     if (this.vel.y > 0) {
-      this.vel.y = 0;
+      this.vel.y = -JUMP_HEIGHT;
+    } else {
+      this.vel.y -= JUMP_HEIGHT * 0.8;
     }
-    this.vel.y -= JUMP_HEIGHT;
     this.flap();
   }
 
