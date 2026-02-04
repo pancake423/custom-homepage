@@ -196,13 +196,11 @@ export default class JettyJeeve extends Canvas {
           this.invincible -= this.dt;
         }
         if (
-          this.invincible <= 0 &&
-          (this.jeeve.pos.y > this.height + this.jeeve.size.y ||
-            this.jeeve.pos.y < -this.jeeve.size.y)
+          this.jeeve.pos.y > this.height + this.jeeve.size.y ||
+          this.jeeve.pos.y < -this.jeeve.size.y
         ) {
+          this.health = 0;
           this.damage();
-          this.jeeve.pos.y = this.height / 2;
-          this.jeeve.vel.y = 0;
         }
         this.jeeve.update();
         if (this.health <= 0) {
