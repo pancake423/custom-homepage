@@ -436,6 +436,7 @@ p {
 
 .body-editor {
     display: none;
+    z-index: 10000;
 }
 
 .body-display {
@@ -496,6 +497,7 @@ p {
     height: var(--icon-size);
     cursor: pointer;
     color: var(--notes-btn-color);
+    z-index: 10000;
 }
 .notes-create-button {
     left: 1rem;

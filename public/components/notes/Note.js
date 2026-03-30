@@ -28,12 +28,24 @@ export default class Note {
     this.delBtn.src = "/assets/icons/x.svg";
     this.delBtn.title = "delete note";
 
+    this.topBtn = document.createElement("img");
+    this.topBtn.classList.add("note-icon");
+    this.topBtn.src = "/assets/icons/front.svg";
+    this.topBtn.title = "move to front";
+
+    this.botBtn = document.createElement("img");
+    this.botBtn.classList.add("note-icon");
+    this.botBtn.src = "/assets/icons/back.svg";
+    this.botBtn.title = "move to back";
+
     this.colorBtn = document.createElement("img");
     this.colorBtn.classList.add("note-icon");
     this.colorBtn.src = "/assets/icons/palette.svg";
     this.colorBtn.title = "change note color";
 
     this.header.appendChild(this.colorBtn);
+    this.header.appendChild(this.botBtn);
+    this.header.appendChild(this.topBtn);
     this.header.appendChild(this.delBtn);
 
     this.base.appendChild(this.icon);
@@ -45,6 +57,9 @@ export default class Note {
     this.y = 0;
     this.w = 0;
     this.h = 0;
+    this.z = 1;
+
+    this.notesPage = null;
 
     this.drag = false;
     this.dragStartX = 0;
@@ -99,6 +114,14 @@ export default class Note {
       e.stopPropagation();
       e.preventDefault();
       this.setStyle(await this.popup.getSelection());
+    };
+
+    this.topBtn.onclick = () => {
+      this.moveToTop();
+    };
+
+    this.botBtn.onclick = () => {
+      this.moveToBottom();
     };
 
     this.load();
@@ -338,11 +361,38 @@ export default class Note {
   }
 
   setSize(w, h, save = true) {
-    this.w = Math.max(w, 100);
+    this.w = Math.max(w, 150);
     this.h = Math.max(h, 100);
     this.base.style.width = `${this.w}px`;
     this.base.style.height = `${this.h}px`;
     if (save) this.save();
+  }
+
+  setZIndex(z, save = true) {
+    this.z = z;
+    this.base.style.zIndex = this.z;
+    if (save) this.save();
+  }
+
+  bindNotesPage(np) {
+    this.notesPage = np;
+  }
+
+  moveToTop() {
+    if (this.notesPage == null) {
+      throw new Error("notes page not bound");
+    }
+    this.notesPage.maxZ++;
+    this.setZIndex(this.notesPage.maxZ);
+    this.notesPage.minimizeZValues();
+  }
+
+  moveToBottom() {
+    if (this.notesPage == null) {
+      throw new Error("notes page not bound");
+    }
+    this.setZIndex(0);
+    this.notesPage.incrementAllZ();
   }
 
   setStyle(style, save = true) {
@@ -360,6 +410,7 @@ export default class Note {
         y: this.y,
         w: this.w,
         h: this.h,
+        z: this.z,
         style: this.#style,
         contents: this.bodyEditor.value,
       }),
@@ -372,6 +423,7 @@ export default class Note {
       this.setPos(0, 0, false);
       this.setSize(250, 250, false);
       this.setStyle(1, false);
+      this.setZIndex(1, false);
       this.save();
       return;
     }
@@ -380,6 +432,7 @@ export default class Note {
     this.setPos(data.x, data.y, false);
     this.setSize(data.w, data.h, false);
     this.setStyle(data.style, false);
+    this.setZIndex(data.z == undefined ? 1 : data.z, false);
 
     this.bodyEditor.value = data.contents;
     this.buildContentsMd(false);

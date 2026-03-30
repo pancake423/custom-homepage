@@ -8,6 +8,7 @@ export default class NotesPage extends Page {
     this.base.classList.add("notes-page");
     this.idx = 0;
     this.notes = [];
+    this.maxZ = 1;
 
     // load all saved notes
     for (const key of Object.keys(localStorage)) {
@@ -19,6 +20,8 @@ export default class NotesPage extends Page {
         const note = new Note(nid);
         this.base.appendChild(note.base);
         this.notes.push(note);
+        note.bindNotesPage(this);
+        if (note.z > this.maxZ) this.maxZ = note.z;
       }
     }
 
@@ -59,6 +62,9 @@ export default class NotesPage extends Page {
   createNote() {
     // create a new note
     const note = new Note(this.idx);
+    note.bindNotesPage(this);
+    this.maxZ++;
+    note.setZIndex(this.maxZ);
     note.setPos(
       Math.random() * (window.innerWidth - 250),
       Math.random() * (window.innerHeight - 250),
@@ -76,5 +82,24 @@ export default class NotesPage extends Page {
       note.delete();
     }
     this.notes = [];
+  }
+
+  incrementAllZ() {
+    for (const note of this.notes) {
+      note.setZIndex(note.z + 1, false);
+    }
+    this.minimizeZValues();
+  }
+
+  minimizeZValues() {
+    const zList = [];
+    for (const note of this.notes) {
+      zList.push(note.z);
+    }
+    zList.sort((a, b) => a - b);
+    for (const note of this.notes) {
+      note.setZIndex(zList.indexOf(note.z) + 1);
+    }
+    this.maxZ = zList.length;
   }
 }
