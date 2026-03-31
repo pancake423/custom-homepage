@@ -25,7 +25,6 @@ export default class NoteColorPopup {
   }
 
   show(x, y) {
-    console.log("popup shown");
     this.base.classList.remove("page-hide");
     this.base.style.left = x;
     this.base.style.top = y;

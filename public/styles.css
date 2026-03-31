@@ -13,6 +13,9 @@ body {
     background-color: #303030;
     overflow: hidden;
     font-family: "Nunito";
+
+    scrollbar-gutter: stable both-edges;
+    scrollbar-color: black rgba(0, 0, 0, 0.1);
 }
 
 h1,
@@ -118,7 +121,7 @@ p {
     box-sizing: border-box;
     padding: 1rem;
     cursor: default;
-    overflow: scroll;
+    overflow-y: auto;
 }
 
 .settings-container {
@@ -410,9 +413,8 @@ p {
 }
 
 .note-resize-icon {
-    opacity: 1;
     position: absolute;
-    right: 0.25rem;
+    right: 1.25rem;
     bottom: 0.25rem;
     width: 1rem;
     height: 1rem;
@@ -429,7 +431,7 @@ p {
     top: 2rem;
     width: 100%;
     height: calc(100% - 2rem);
-    overflow: scroll;
+    overflow-y: scroll;
     box-sizing: border-box;
     resize: none;
 }
@@ -498,7 +500,9 @@ p {
     cursor: pointer;
     color: var(--notes-btn-color);
     z-index: 10000;
+    user-select: none;
 }
+
 .notes-create-button {
     left: 1rem;
 }

@@ -27,21 +27,25 @@ export default class Note {
     this.delBtn.classList.add("note-icon");
     this.delBtn.src = "/assets/icons/x.svg";
     this.delBtn.title = "delete note";
+    this.delBtn.draggable = false;
 
     this.topBtn = document.createElement("img");
     this.topBtn.classList.add("note-icon");
     this.topBtn.src = "/assets/icons/front.svg";
     this.topBtn.title = "move to front";
+    this.topBtn.draggable = false;
 
     this.botBtn = document.createElement("img");
     this.botBtn.classList.add("note-icon");
     this.botBtn.src = "/assets/icons/back.svg";
     this.botBtn.title = "move to back";
+    this.botBtn.draggable = false;
 
     this.colorBtn = document.createElement("img");
     this.colorBtn.classList.add("note-icon");
     this.colorBtn.src = "/assets/icons/palette.svg";
     this.colorBtn.title = "change note color";
+    this.colorBtn.draggable = false;
 
     this.header.appendChild(this.colorBtn);
     this.header.appendChild(this.botBtn);
@@ -116,13 +120,21 @@ export default class Note {
       this.setStyle(await this.popup.getSelection());
     };
 
-    this.topBtn.onclick = () => {
+    this.topBtn.onclick = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
       this.moveToTop();
     };
 
-    this.botBtn.onclick = () => {
+    this.botBtn.onclick = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
       this.moveToBottom();
     };
+
+    for (const btn of [this.delBtn, this.colorBtn, this.topBtn, this.botBtn]) {
+      btn.onmousedown = (e) => e.stopPropagation();
+    }
 
     this.load();
   }
