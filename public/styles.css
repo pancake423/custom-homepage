@@ -510,3 +510,33 @@ p {
 .notes-trash-button {
     left: calc(2rem + var(--icon-size));
 }
+
+.cp-base {
+    width: 2rem;
+    height: 2rem;
+
+    border: 2px solid black;
+    border-radius: 0.25rem;
+    background-image: url(assets/images/checkerboard.png);
+    cursor: pointer;
+    background-size: contain;
+    position: relative;
+}
+
+.cp-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.cp-popup {
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 0.25rem;
+
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}

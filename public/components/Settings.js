@@ -1,5 +1,6 @@
 import { loadPartial, loadSVG } from "./helpers.js";
 import ColorManager from "./ColorManager.js";
+import ColorPicker from "./color/ColorPicker.js";
 
 async function addSection(parent, name) {
   const section = await loadPartial("/partials/settings-section.html", true);
@@ -34,15 +35,17 @@ async function initColorSettings(colors) {
       const label = document.createElement("label");
       label.for = info.name;
       label.innerText = info.display;
-      const picker = document.createElement("input");
-      picker.type = "color";
-      picker.id = info.name;
-      picker.value = ColorManager.get(info.name);
-      picker.onchange = () => {
-        ColorManager.set(info.name, picker.value);
-      };
+      const picker = new ColorPicker(ColorManager.get(info.name));
+      picker.setCallback((c) => ColorManager.set(info.name, c));
+      // const picker = document.createElement("input");
+      // picker.type = "color";
+      // picker.id = info.name;
+      // picker.value = ColorManager.get(info.name);
+      // picker.onchange = () => {
+      //   ColorManager.set(info.name, picker.value);
+      // };
       node.appendChild(label);
-      node.appendChild(picker);
+      node.appendChild(picker.base);
       sect.appendChild(node);
     }
   }
