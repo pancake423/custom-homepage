@@ -27,8 +27,8 @@ export default class NotesPage extends Page {
 
     // since I can't leave a memory leak I know about, clean up any deleted notes
     window.setTimeout(() => {
-      for (let i = notes.length - 1; i >= 0; i--) {
-        if (notes[i].deleted) {
+      for (let i = this.notes.length - 1; i >= 0; i--) {
+        if (this.notes[i].deleted) {
           notes.splice(i, 1);
         }
       }

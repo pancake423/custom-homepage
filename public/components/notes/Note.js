@@ -171,7 +171,10 @@ export default class Note {
   }
 
   #rm(e) {
-    e.preventDefault();
+    // bugfix: preventDefault here (on a global listener)
+    // broke mouse move events on my sliders when I went to make a color picker.
+    // tough bug to crack. leaving this as a post-mortem haha
+    // e.preventDefault();
     if (!this.resize) return;
     this.setSize(
       this.sw + e.clientX - this.resizeStartX,

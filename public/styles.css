@@ -107,6 +107,7 @@ p {
     background-color: rgba(0, 0, 0, 0.2);
     cursor: pointer;
     z-index: 1000;
+    user-select: none;
 }
 
 .settings-page {
@@ -122,6 +123,7 @@ p {
     padding: 1rem;
     cursor: default;
     overflow-y: auto;
+    user-select: none;
 }
 
 .settings-container {
@@ -533,28 +535,43 @@ p {
     background-color: white;
     border: 2px solid black;
     border-radius: 0.25rem;
-
-    /*width: 100px;
-    height: 100px;*/
     position: absolute;
-    right: 0;
-    bottom: 0;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    z-index: 100000;
     padding: 0.5rem;
+    user-select: none;
+    cursor: default;
+}
+
+.cp-popup-blocker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 99999;
 }
 
 .cp-selector-base {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
-    width: 15rem;
+    justify-content: space-between;
+    width: 20rem;
+    user-select: none;
 }
 
 .cp-selector-label,
 .cp-selector-input,
+.cp-str-input,
 .cp-selector-slider {
     padding: 0.25rem;
     box-sizing: border-box;
+    user-select: none;
+    position: relative;
 }
 
 .cp-selector-label {
@@ -567,4 +584,50 @@ p {
 
 .cp-selector-slider {
     width: 50%;
+}
+
+.cp-str-input {
+    width: 60%;
+}
+
+.cp-hline {
+    margin-block: 0.5rem;
+    width: 100%;
+    height: 1px;
+    background-color: black;
+}
+
+.cp-submit {
+    border: none;
+    outline: none;
+    padding: 0.5rem;
+    background-color: seagreen;
+    color: white;
+    cursor: pointer;
+    border-radius: 0.25rem;
+}
+
+.ct-base {
+    width: 2rem;
+    height: 2rem;
+
+    border: 2px solid black;
+    border-radius: 0.25rem;
+    background-image: url(assets/images/checkerboard.png);
+    background-size: contain;
+    position: relative;
+}
+
+.ct-overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.ch-base {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    min-height: 2rem;
+    row-gap: 0.25rem;
 }

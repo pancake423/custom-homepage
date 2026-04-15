@@ -5,7 +5,7 @@ export default class SelectorRow {
 
     this.label = document.createElement("label");
     this.label.classList.add("cp-selector-label");
-    this.label.htmlFor = "";
+    this.label.htmlFor = label;
     this.label.innerText = label;
 
     this.slider = document.createElement("input");
@@ -13,6 +13,7 @@ export default class SelectorRow {
     this.slider.type = "range";
     this.slider.min = min;
     this.slider.max = max;
+    this.slider.name = label;
     this.slider.step = step;
 
     this.input = document.createElement("input");
@@ -20,23 +21,45 @@ export default class SelectorRow {
     this.input.type = "number";
     this.input.min = min;
     this.input.max = max;
-    this.slider.step = step;
+    this.input.name = label;
+    this.input.step = step;
 
     this.base.appendChild(this.label);
     this.base.appendChild(this.slider);
     this.base.appendChild(this.input);
 
     // sync the value of the input and slider
-    this.input.onchange = () => {
-      this.setValue(this.input.value);
+    this.input.oninput = () => {
+      this.slider.value = this.input.value;
+      if (this.callback) this.callback();
     };
-    this.slider.onchange = () => {
-      this.setValue(this.slider.value);
+    this.slider.oninput = (e) => {
+      e.stopPropagation();
+      this.input.value = this.slider.value;
+      if (this.callback) this.callback();
     };
+
+    this.slider.onclick = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+  }
+
+  setUpdateCallback(fn) {
+    this.callback = fn;
+  }
+
+  getValue() {
+    return this.slider.valueAsNumber;
   }
 
   setValue(v) {
     this.input.value = v;
     this.slider.value = v;
+  }
+
+  setSliderColor(c) {
+    this.input.style.accentColor = c;
+    this.slider.style.accentColor = c;
   }
 }

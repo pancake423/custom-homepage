@@ -26,6 +26,8 @@ async function initColorSettings(colors) {
     }
     categories[info.category].push(info);
   }
+  const color_pickers = {};
+
   // 2. add each category as a subsection, and fill the color info
   for (const category of Object.keys(categories)) {
     const sect = await addSection(colors, category);
@@ -36,6 +38,7 @@ async function initColorSettings(colors) {
       label.for = info.name;
       label.innerText = info.display;
       const picker = new ColorPicker(ColorManager.get(info.name));
+      color_pickers[info.name] = picker;
       picker.setCallback((c) => ColorManager.set(info.name, c));
       // const picker = document.createElement("input");
       // picker.type = "color";
@@ -58,9 +61,10 @@ async function initColorSettings(colors) {
       return;
     ColorManager.reset();
     // make sure that displayed colors stay synced
-    for (const input of colors.querySelectorAll("input")) {
-      input.value = ColorManager.get(input.id);
-    }
+    Object.keys(color_pickers).forEach((key) => {
+      const cp = color_pickers[key];
+      cp.setColor(ColorManager.get(key));
+    });
   };
   colors.appendChild(btn);
 }

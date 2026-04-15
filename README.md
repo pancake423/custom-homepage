@@ -4,8 +4,9 @@ A small website designed to mostly work offline, used as a browser homepage.
 
 It includes:
 - a customizable links page for quickly navigating to frequently used websites
-- a notes app (coming soon)
+- a notes app
 - highly customizable color schemes
+- cross-device cloud syncing (coming soon?)
 
 # Usage
 
