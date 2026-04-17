@@ -38,9 +38,22 @@ const putInCache = async (request, response) => {
 };
 
 async function cacheNetworkResponse(event) {
-  const responseFromNetwork = await fetch(event.request);
-  await putInCache(event.request, responseFromNetwork.clone());
-  return responseFromNetwork;
+  try {
+    const responseFromNetwork = await fetch(event.request);
+    await putInCache(event.request, responseFromNetwork.clone());
+    return responseFromNetwork;
+  } catch {
+    // the only way you should be able to get here is if:
+    // 1. the code just updated and we're getting network responses
+    // 2. the server went offline during the same browsing session
+    // 3. the user refreshes
+    //
+    // if that somehow all happens, fall back to the cache.
+    console.log("you got to the legendary rare fallback scenario! congrats.");
+    return await caches.match(event.request);
+
+    // if that fails, well screw you :)
+  }
 }
 
 // stores the remote up-to-date hash (if found)
