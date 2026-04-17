@@ -1,6 +1,7 @@
 import express from "express";
 import { getSiteInfo, getFavicon } from "./src/parser.js";
 import { PORT } from "./src/env.js";
+import { exec } from "child_process";
 
 const app = express();
 
@@ -19,6 +20,12 @@ app.post("/api/generateLink", async (req, res) => {
 app.post("/api/getFavicon", async (req, res) => {
   const favicon = await getFavicon(req.body.url);
   res.json({ url: req.body.url, thumbnail: favicon, title: req.body.url });
+});
+
+app.get("/api/currentHash", async (req, res) => {
+  exec("git rev-parse HEAD", (err, stdout, stderr) => {
+    res.json({ hash: stdout.trim() });
+  });
 });
 
 app.listen(PORT, () =>
