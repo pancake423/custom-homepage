@@ -82,7 +82,7 @@ export default class Settings {
 
     const parent = s.page.querySelector(".settings-container");
     s.links = await addSection(parent, "Links Page");
-    s.notes = await addSection(parent, "Notes Page");
+    // s.notes = await addSection(parent, "Notes Page");
     const colors = await addSection(parent, "Color Scheme");
 
     await initColorSettings(colors);

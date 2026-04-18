@@ -1,4 +1,3 @@
-import { PORT } from "./env.js";
 import puppeteer, { Browser } from "puppeteer";
 import { curly } from "node-libcurl";
 

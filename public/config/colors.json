@@ -33,97 +33,97 @@
     },
     {
       "name": "links-bg-color",
-      "category": "Links",
+      "category": "Links Page",
       "display": "Background color",
       "default": "#333333"
     },
     {
       "name": "links-text-color",
-      "category": "Links",
+      "category": "Links Page",
       "display": "Text color",
       "default": "#ffffff"
     },
     {
       "name": "links-icon-bg",
-      "category": "Links",
+      "category": "Links Page",
       "display": "Icon background color",
       "default": "#ffffff"
     },
     {
       "name": "links-clock-color",
-      "category": "Links",
+      "category": "Links Page",
       "display": "Clock color (lit segments)",
       "default": "#ffffff"
     },
     {
       "name": "links-clock-shadow",
-      "category": "Links",
+      "category": "Links Page",
       "display": "Clock color (unlit segments)",
       "default": "#303030"
     },
     {
       "name": "links-clock-bg",
-      "category": "Links",
+      "category": "Links Page",
       "display": "Clock background color",
       "default": "#000000"
     },
     {
       "name": "notes-bg-color",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Notes page background color",
       "default": "#333333"
     },
     {
       "name": "notes-btn-color",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Notes page button color",
       "default": "#ffffff"
     },
     {
       "name": "notes-text-color",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Sticky note text color",
       "default": "#000000"
     },
     {
       "name": "notes-check-color",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "List item checkmark color",
       "default": "#000000"
     },
     {
       "name": "notes-theme-1",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Notes theme color #1",
       "default": "#e2e093"
     },
     {
       "name": "notes-theme-2",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Notes theme color #2",
       "default": "#bde293"
     },
     {
       "name": "notes-theme-3",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Notes theme color #3",
       "default": "#e2b893"
     },
     {
       "name": "notes-theme-4",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Notes theme color #4",
       "default": "#dd93e2"
     },
     {
       "name": "notes-theme-5",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Notes theme color #5",
       "default": "#e293c0"
     },
     {
       "name": "notes-theme-6",
-      "category": "Notes",
+      "category": "Notes Page",
       "display": "Notes theme color #6",
       "default": "#b593e2"
     }
