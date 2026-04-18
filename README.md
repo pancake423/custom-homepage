@@ -24,6 +24,9 @@ cd custom-homepage
 # download project dependencies
 npm install
 
+# use the development .env file
+cp .env.development .env
+
 # start the development server.
 npm run start
 

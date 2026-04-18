@@ -2,6 +2,7 @@ import express from "express";
 import { getSiteInfo, getFavicon } from "./src/parser.js";
 import { PORT } from "./src/env.js";
 import { exec } from "child_process";
+import "dotenv/config";
 
 const app = express();
 
@@ -23,11 +24,14 @@ app.post("/api/getFavicon", async (req, res) => {
 });
 
 app.get("/api/currentHash", async (req, res) => {
-  exec("git rev-parse HEAD", (err, stdout, stderr) => {
-    res.json({ hash: stdout.trim() });
+  exec("git rev-parse HEAD", (_, stdout) => {
+    res.json({
+      hash: stdout.trim(),
+      env: process.env.ENV,
+    });
   });
 });
 
 app.listen(PORT, () =>
-  console.log(`server listening at http://localhost:${PORT}`),
+  console.log(`server listening at http://localhost:${process.env.PORT}`),
 );

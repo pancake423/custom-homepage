@@ -58,12 +58,15 @@ async function cacheNetworkResponse(event) {
 
 // stores the remote up-to-date hash (if found)
 let hash = null;
+let env = null;
 
 // get the remote hash
 async function getRemoteHash() {
   if (hash == null) {
     // TODO: what happens if the server is unreachable???
-    hash = (await (await fetch("/api/currentHash")).json()).hash;
+    const res = await (await fetch("/api/currentHash")).json();
+    hash = res.hash;
+    env = res.env;
     console.log("remote hash is", hash);
   }
   return hash;
@@ -174,6 +177,11 @@ async function shouldUseCache() {
   if (offline) {
     log("using cache (reason: offline)");
     return true;
+  }
+
+  if (env == "development") {
+    log("not using cache (reason: development server)");
+    return false;
   }
 
   await getLocalHash();
