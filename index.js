@@ -1,6 +1,5 @@
 import express from "express";
 import { getSiteInfo, getFavicon } from "./src/parser.js";
-import { PORT } from "./src/env.js";
 import { exec } from "child_process";
 import "dotenv/config";
 
@@ -32,6 +31,6 @@ app.get("/api/currentHash", async (req, res) => {
   });
 });
 
-app.listen(PORT, () =>
+app.listen(process.env.PORT, () =>
   console.log(`server listening at http://localhost:${process.env.PORT}`),
 );
