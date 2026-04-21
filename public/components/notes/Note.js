@@ -79,13 +79,15 @@ export default class Note {
 
     this.deleted = false;
 
-    this.header.onmousedown = (e) => this.#md(e);
-    window.addEventListener("mouseup", (e) => this.#mu(e));
-    window.addEventListener("mousemove", (e) => this.#mm(e));
+    this.header.onpointerdown = (e) => this.#md(e);
+    window.addEventListener("pointerup", (e) => this.#mu(e));
+    window.addEventListener("pointercancel", (e) => this.#mu(e));
+    window.addEventListener("pointermove", (e) => this.#mm(e));
 
-    this.icon.onmousedown = (e) => this.#rs(e);
-    window.addEventListener("mouseup", (e) => this.#re(e));
-    window.addEventListener("mousemove", (e) => this.#rm(e));
+    this.icon.onpointerdown = (e) => this.#rs(e);
+    window.addEventListener("pointerup", (e) => this.#re(e));
+    window.addEventListener("pointercancel", (e) => this.#re(e));
+    window.addEventListener("pointermove", (e) => this.#rm(e));
 
     this.bodyEditor.onkeydown = (e) => {
       if (e.ctrlKey && e.key == "Enter") {

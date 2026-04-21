@@ -11,19 +11,26 @@ import HistoryManager from "./components/color/HistoryManager.js";
 window.addEventListener("DOMContentLoaded", async () => {
   await registerServiceWorker();
   await ColorManager.load();
-
   HistoryManager.init();
 
+  const isMobile = window.matchMedia("(max-width: 600px)").matches;
+
+  console.log(isMobile);
+
   const settings = await Settings.construct();
-
   const homepage = new LinksPage(settings.links);
-  const game = new DuckGame(homepage.base);
-  await game.init();
 
-  const jj = new JettyJeeve(game);
-  await jj.init();
+  // don't load the games on mobile since they're
+  // unplayable anyways
+  if (!isMobile) {
+    const game = new DuckGame(homepage.base);
+    await game.init();
+
+    const jj = new JettyJeeve(game);
+    await jj.init();
+  }
+
   const notes = new NotesPage("Notes");
-
   const navbar = new Navbar(homepage, notes);
   await homepage.loadPageSettings();
   navbar.navigate(homepage);

@@ -122,13 +122,17 @@ p {
     box-sizing: border-box;
     padding: 1rem;
     cursor: default;
-    overflow-y: auto;
     user-select: none;
+}
+
+.settings-page > div {
+    overflow-y: auto;
 }
 
 .settings-container {
     box-sizing: border-box;
     padding: 1rem;
+    max-height: 90%;
 }
 
 .settings-caret {
@@ -244,6 +248,10 @@ p {
 .settings-link-blocked {
     cursor: not-allowed;
     opacity: 0.25;
+}
+
+.settings-link-name {
+    text-wrap: wrap;
 }
 
 .settings-close {
@@ -630,4 +638,36 @@ p {
     grid-template-columns: repeat(8, auto);
     min-height: 2rem;
     row-gap: 0.25rem;
+}
+
+.clock-inner {
+    height: 7rem;
+}
+
+@media screen and (max-width: 600px) {
+    .ampm {
+        font-size: 1rem;
+    }
+
+    .clock-display {
+        font-size: 3rem;
+    }
+
+    .clock-inner {
+        height: 4rem;
+    }
+
+    .settings-page {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0px;
+    }
+
+    .settings-container {
+        padding: 0.5rem;
+    }
+
+    .settings-link-create {
+        width: 4rem;
+    }
 }
