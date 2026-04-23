@@ -24,7 +24,9 @@ async function handleFetchRequest(event) {
   // check if online, check if cache out of date
   if (await shouldUseCache()) {
     // try to fetch from the cache, if it fails, get it from the server and store it in the cache.
-    const responseFromCache = await caches.match(event.request);
+    const responseFromCache = await caches.match(event.request, {
+      cacheName: "v2",
+    });
     if (responseFromCache) {
       return responseFromCache;
     }
@@ -33,7 +35,7 @@ async function handleFetchRequest(event) {
 }
 
 const putInCache = async (request, response) => {
-  const cache = await caches.open("v1");
+  const cache = await caches.open("v2");
   await cache.put(request, response);
 };
 
