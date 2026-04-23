@@ -31,6 +31,12 @@ app.get("/api/currentHash", async (req, res) => {
   });
 });
 
+// safety check that .env is loaded
+if (process.env.PORT == undefined) {
+  console.error("Error: No .env file present.");
+  process.exit(1);
+}
+
 app.listen(process.env.PORT, () =>
   console.log(`server listening at http://localhost:${process.env.PORT}`),
 );

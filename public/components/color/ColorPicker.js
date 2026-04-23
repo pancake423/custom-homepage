@@ -24,11 +24,6 @@ export default class ColorPicker {
     this.popupBlocker.classList.add("page-hide", "cp-popup-blocker");
     document.body.appendChild(this.popupBlocker);
 
-    // TODO: add controls
-    // text boxes for R, G, B, A
-    // text box for hex color (8-digit w/ alpha)
-    // history list of last 10 ? used colors (needs to save to localstorage)
-
     this.selectors = {
       R: new SelectorRow("R:", 0, 255),
       G: new SelectorRow("G:", 0, 255),
@@ -69,7 +64,6 @@ export default class ColorPicker {
 
     this.createLabeledRow("History:");
 
-    // TODO: history buttons
     this.history = new ColorHistory(this.popup, (c) => {
       this.setPopupColor(c);
     });
@@ -80,6 +74,10 @@ export default class ColorPicker {
     this.submit.classList.add("cp-submit");
     this.submit.innerText = "Done";
 
+    this.cancel = document.createElement("button");
+    this.cancel.classList.add("cp-cancel");
+    this.cancel.innerText = "Cancel";
+
     this.submit.onclick = () => {
       const c = this.preview.getColor();
       HistoryManager.saveColor(c);
@@ -89,11 +87,26 @@ export default class ColorPicker {
       this.resolve(c);
     };
 
-    this.popup.appendChild(this.submit);
+    this.cancel.onclick = () => {
+      this.popup.classList.add("page-hide");
+      this.popupBlocker.classList.add("page-hide");
+      this.popupOpen = false;
+      this.rej();
+    };
+
+    const btnRow = this.createLabeledRow();
+
+    this.popup.appendChild(btnRow);
+    btnRow.appendChild(this.submit);
+    btnRow.appendChild(this.cancel);
 
     this.base.onclick = async () => {
       if (this.popupOpen) return;
-      this.setColor(await this.getPopupResults());
+      try {
+        this.setColor(await this.getPopupResults());
+      } catch {
+        // popup cancelled, safe to ignore
+      }
     };
   }
 
@@ -112,11 +125,13 @@ export default class ColorPicker {
     const row = document.createElement("div");
     row.classList.add("cp-selector-base");
 
-    const label = document.createElement("label");
-    label.for = name;
-    label.innerText = name;
+    if (name !== undefined) {
+      const label = document.createElement("label");
+      label.for = name;
+      label.innerText = name;
 
-    row.appendChild(label);
+      row.appendChild(label);
+    }
     this.popup.appendChild(row);
 
     return row;

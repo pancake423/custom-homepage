@@ -15,8 +15,6 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   const isMobile = window.matchMedia("(max-width: 600px)").matches;
 
-  console.log(isMobile);
-
   const settings = await Settings.construct();
   const homepage = new LinksPage(settings.links);
 

@@ -605,7 +605,7 @@ p {
     background-color: black;
 }
 
-.cp-submit {
+.cp-submit, .cp-cancel {
     border: none;
     outline: none;
     padding: 0.5rem;
@@ -613,6 +613,10 @@ p {
     color: white;
     cursor: pointer;
     border-radius: 0.25rem;
+}
+
+.cp-cancel {
+    background-color: darkred;
 }
 
 .ct-base {
