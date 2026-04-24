@@ -2,6 +2,7 @@ import express from "express";
 import { getSiteInfo, getFavicon } from "./src/parser.js";
 import { exec } from "child_process";
 import "dotenv/config";
+import * as db from "./src/database.js";
 
 const app = express();
 
