@@ -34,7 +34,10 @@ npm run start
 ```
 
 the development server runs at http://localhost:51432. If you need a
-different port, it can be changed in `/src/env.js`.
+different port, it can be changed in `.env`.
+
+The server uses some of the latest features of Node (builtin SQLite support), so I recommend
+using at least node v24.15.0 (the latest LTS release).
 
 ## Setting a homepage
 In your browser settings, find the homepage settings and set it to the url from above (https://homepage.wxj.me, or http://localhost:51432 for local development).
