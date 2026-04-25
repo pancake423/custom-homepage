@@ -21,7 +21,8 @@ function initDatabases() {
       salt TEXT NOT NULL,
       hash TEXT NOT NULL,
       iv TEXT NOT NULL,
-      token TEXT NOT NULL
+      token TEXT NOT NULL,
+      token_hash TEXT NOT NULL
     );
 
     DROP TABLE IF EXISTS saves;
@@ -38,53 +39,137 @@ function initDatabases() {
   `);
 }
 
+/**
+ * @typedef LoginResponse
+ * @property {string|null} error - error message, or null if no error.
+ * @property {string|null} token - the user's token, if successful.
+ * @property {int} status - HTTP response status code
+ */
+
+/**
+ * attempt to log in as the given user.
+ *
+ * @param {string} user- username
+ * @param {string} pass- password
+ * @returns {LoginResponse}
+ */
 export function login(user, pass) {
   // get the correct user entry
   const res = db.prepare(`SELECT * from users WHERE username = ?;`).get(user);
 
+  if (res === undefined) {
+    return {
+      error: "invalid username",
+      token: null,
+      status: 401,
+    };
+  }
+
+  // verify the hash of their salted password
+  if (crypto.hash(pass + res.salt) !== res.hash) {
+    return {
+      error: "invalid password",
+      token: null,
+      status: 401,
+    };
+  }
   // decrypt and return their token
-  return [res.id, crypto.decrypt(res.token, pass, res.salt, res.iv)];
+  return {
+    error: null,
+    token: crypto.decrypt(res.token, pass, res.salt, res.iv),
+    status: 200,
+  };
 }
 
+/**
+ * attempt to register the given user.
+ *
+ * @param {string} user- username
+ * @param {string} pass- password
+ * @returns {LoginResponse}
+ */
 export function register(user, pass) {
   // create a new user, and generate their token
   // return the token for the user
 
-  const stmt = db.prepare(
-    `INSERT INTO users (username, salt, hash, iv, token) VALUES (?, ?, ?, ?, ?);`,
-  );
-  const salt = crypto.salt();
-  const iv = crypto.iv();
-  const token = crypto.token();
-  stmt.run(
-    user,
-    salt,
-    crypto.hash(pass + salt),
-    iv,
-    crypto.encrypt(token, pass, salt, iv),
-  );
+  try {
+    const stmt = db.prepare(
+      `INSERT INTO users (username, salt, hash, iv, token, token_hash) VALUES (?, ?, ?, ?, ?, ?);`,
+    );
+    const salt = crypto.salt();
+    const iv = crypto.iv();
+    const token = crypto.token();
+    stmt.run(
+      user,
+      salt,
+      crypto.hash(pass + salt),
+      iv,
+      crypto.encrypt(token, pass, salt, iv),
+      crypto.hash(token),
+    );
 
-  const [id, _] = login(user, pass);
-
-  // a stupid fix to a stupid problem: fill all the slots with empty data to avoid
-  // the possibility of someone overwriting other people's empty save slots and locking them out.
-
-  for (let i = 0; i < 5; i++) {
-    save(id, token, i, {});
+    return {
+      error: null,
+      token: token,
+      status: 201,
+    };
+  } catch (e) {
+    return {
+      error: e.message,
+      token: null,
+      status: 422,
+    };
   }
-
-  return (id, token);
 }
 
-export function save(id, token, slot, contents) {
+/**
+ * looks up the user ID based on their token.
+ * returns null if the token doesn't match or is invalid.
+ *
+ * @param {string} token
+ * @returns {int|null}
+ */
+function getUserId(token) {
+  const res = db
+    .prepare(`SELECT id from users WHERE token_hash = ?`)
+    .get(crypto.hash(token));
+
+  if (res === undefined) {
+    return null;
+  }
+
+  return res.id;
+}
+
+/**
+ * @typedef SaveResponse
+ * @prop {string|null} error - the error message, or null if no error.
+ * @prop {int} response - the HTTP status response code.
+ */
+
+/**
+ * save the provided contents to the given save slot.
+ *
+ * @param {string} token - the user's token
+ * @param {int} slot - the id of the slot to save to.
+ * @param {*} contents - contents to save. must be JSON-encodable
+ * @returns {SaveResponse}
+ */
+export function save(token, slot, contents) {
+  // authenticate user based on token
+  const id = getUserId(token);
+  if (token === null) {
+    return {
+      error: "Not authenticated",
+      status: 401,
+    };
+  }
+
   const res = db
     .prepare(`SELECT * from saves WHERE user_id = ? AND slot = ?`)
     .get(id, slot);
 
   if (res !== undefined) {
-    if (!validateOwnership(id, token, slot)) {
-      return false;
-    }
     db.prepare(`DELETE FROM saves WHERE id = ?`).run(res.id);
   }
 
@@ -101,17 +186,52 @@ export function save(id, token, slot, contents) {
     id,
   );
 
-  return true;
+  return {
+    error: null,
+    status: 201,
+  };
 }
 
-function validateOwnership(id, token, slot) {
-  return typeof get(id, token, slot) == "object";
-}
+/**
+ * @typedef GetResponse
+ * @prop {string|null} error
+ * @prop {*} data
+ * @prop {int} status
+ */
 
-export function get(id, token, slot) {
+/**
+ * get the contents of the given save slot.
+ *
+ * @param {string} token - the user's token
+ * @param {int} slot - the id of the slot to get.
+ * @returns {GetResponse}
+ */
+export function get(token, slot) {
+  // authenticate user based on token
+  const id = getUserId(token);
+  if (token === null) {
+    return {
+      error: "Not authenticated",
+      status: 401,
+      data: null,
+    };
+  }
+
   const res = db
     .prepare(`SELECT * from saves WHERE user_id = ? AND slot = ?`)
     .get(id, slot);
 
-  return JSON.parse(crypto.decrypt(res.data, token, res.salt, res.iv));
+  if (res === undefined) {
+    return {
+      error: `No save data in slot ${slot}.`,
+      status: 404,
+      data: null,
+    };
+  }
+
+  return {
+    error: null,
+    status: 200,
+    data: JSON.parse(crypto.decrypt(res.data, token, res.salt, res.iv)),
+  };
 }

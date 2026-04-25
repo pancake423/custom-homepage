@@ -125,3 +125,21 @@ export async function loadImageBitmap(texturePath) {
   await img.decode();
   return await createImageBitmap(img);
 }
+
+export async function sendJSON(url, method, body) {
+  return await fetch(url, {
+    method: method,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+// put in global scope for testing endpoints in the console
+window.sendJSON = sendJSON;
+
+window.debugEndpoint = async (url, method, body) => {
+  const res = await sendJSON(url, method, body);
+  const data = await res.json();
+
+  console.log(data);
+};

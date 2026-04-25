@@ -3,6 +3,7 @@ import { getSiteInfo, getFavicon } from "./src/parser.js";
 import { exec } from "child_process";
 import "dotenv/config";
 import * as db from "./src/database.js";
+import { middleware } from "./src/validate.js";
 
 const app = express();
 
@@ -31,6 +32,59 @@ app.get("/api/currentHash", async (req, res) => {
     });
   });
 });
+
+app.post(
+  "/api/register",
+  middleware((v) => {
+    v.exists("username").isType("string");
+    v.exists("password").isType("string");
+  }),
+  (req, res) => {
+    res.json({
+      message: "not implemented",
+    });
+  },
+);
+
+app.post(
+  "/api/login",
+  middleware((v) => {
+    v.exists("username").isType("string");
+    v.exists("password").isType("string");
+  }),
+  (req, res) => {
+    res.json({
+      message: "not implemented",
+    });
+  },
+);
+
+app.post(
+  "/api/saveData",
+  middleware((v) => {
+    v.exists("slot").isInt().isInRange(0, 4);
+    v.exists("data").isType("object");
+  }),
+  (req, res) => {
+    // get the token from the request cookies ??
+    res.json({
+      message: "not implemented",
+    });
+  },
+);
+
+app.get(
+  "/api/getData",
+  middleware((v) => {
+    v.exists("slot").isInt().isInRange(0, 4);
+  }),
+  (req, res) => {
+    // get the token from the request cookies ??
+    res.json({
+      message: "not implemented",
+    });
+  },
+);
 
 // safety check that .env is loaded
 if (process.env.PORT == undefined) {
