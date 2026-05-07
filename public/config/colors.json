@@ -126,6 +126,42 @@
       "category": "Notes Page",
       "display": "Notes theme color #6",
       "default": "#b593e2"
+    },
+    {
+      "name": "notes-lattice-lines",
+      "category": "Notes Page",
+      "display": "Notes lattice color",
+      "default": "rgba(124, 160, 126, 1)"
+    },
+    {
+      "name": "notes-lattice-vines",
+      "category": "Notes Page",
+      "display": "Notes vine color",
+      "default": "rgba(33, 120, 46, 1)"
+    },
+    {
+      "name": "f1-color",
+      "category": "Notes Page",
+      "display": "Notes flower petal color 1",
+      "default": "rgba(240, 64, 160, 1)"
+    },
+    {
+      "name": "f2-color",
+      "category": "Notes Page",
+      "display": "Notes flower petal color 2",
+      "default": "rgba(250, 115, 62, 1)"
+    },
+    {
+      "name": "f1-center",
+      "category": "Notes Page",
+      "display": "Notes flower center color 1",
+      "default": "rgba(255, 188, 224, 1)"
+    },
+    {
+      "name": "f2-center",
+      "category": "Notes Page",
+      "display": "Notes flower center color 2",
+      "default": "rgba(255, 202, 157, 1)"
     }
   ]
 }

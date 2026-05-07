@@ -1,6 +1,7 @@
 import { loadSVG } from "../helpers.js";
 import Page from "../Page.js";
 import Note from "./Note.js";
+import Lattice from "./Lattice.js";
 
 export default class NotesPage extends Page {
   constructor() {
@@ -9,6 +10,8 @@ export default class NotesPage extends Page {
     this.idx = 0;
     this.notes = [];
     this.maxZ = 1;
+
+    this.bg = new Lattice(this.base);
 
     // load all saved notes
     for (const key of Object.keys(localStorage)) {

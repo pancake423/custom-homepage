@@ -69,6 +69,7 @@ export default class ColorManager {
     ColorManager.check(name);
     localStorage.setItem(fullName, value);
     ColorManager.setCss(name, value);
+    dispatchEvent(new Event("colorupdate"));
   }
 
   /**

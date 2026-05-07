@@ -143,3 +143,34 @@ window.debugEndpoint = async (url, method, body) => {
 
   console.log(data);
 };
+
+/**
+ * helper function for quickly creating HTML elements in JS
+ *
+ * @param {string} tagName- the element's tag.
+ * @param {string[]} classList- list of the element's CSS classes.
+ * @param {HTMLElement|null} parent - if provided, the parent element to append this element to.
+ *
+ * @returns {HTMLElement} - the newly created element.
+ */
+export function create(tagName = "div", classList = [], parent = null) {
+  const node = document.createElement(tagName);
+  for (const className of classList) {
+    node.classList.add(className);
+  }
+  if (parent !== null) {
+    parent.appendChild(node);
+  }
+
+  return node;
+}
+
+/**
+ * gets the value of a CSS variable in JS.
+ *
+ * @param {string} name - name of the CSS variable (-- included).
+ * @returns
+ */
+export function cssVar(name) {
+  return window.getComputedStyle(document.body).getPropertyValue(name);
+}

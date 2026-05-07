@@ -23,8 +23,6 @@ export default class HistoryManager {
 
   // add a color to the history list (if necessary)
   static saveColor(c) {
-    console.log("save color", c);
-
     const idx = this.#list.indexOf(c);
 
     if (idx == -1) {
