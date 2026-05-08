@@ -12,6 +12,7 @@ self.addEventListener("install", () => {
 });
 
 self.addEventListener("fetch", (event) => {
+  // return a response from the cache, handle the request in the background
   event.respondWith(handleFetchRequest(event));
 });
 
@@ -21,17 +22,36 @@ async function handleFetchRequest(event) {
     // don't store API requests in the cache.
     return await fetch(event.request);
   }
-  // check if online, check if cache out of date
-  if (await shouldUseCache()) {
-    // try to fetch from the cache, if it fails, get it from the server and store it in the cache.
-    const responseFromCache = await caches.match(event.request, {
-      cacheName: "v2",
+  if (isSWStatusRequest(event)) {
+    return Response.json({
+      offline: offline,
+      localHash: localHash,
+      remoteHash: hash,
+      message: oldMessage,
+      env: env,
     });
-    if (responseFromCache) {
-      return responseFromCache;
-    }
   }
-  return await cacheNetworkResponse(event);
+
+  // try to match and return a result from the cache.
+  const responseFromCache = await caches.match(event.request, {
+    cacheName: "v2",
+  });
+
+  if (responseFromCache) {
+    // check for cache updates, but DON'T await it
+    // should result in an instant load if offline,
+    // while caching updates if needed in the background?
+    checkForCacheUpdates(event.request);
+    return responseFromCache;
+  }
+  return await cacheNetworkResponse(event.request);
+}
+
+async function checkForCacheUpdates(request) {
+  if (await shouldUseCache()) {
+    return;
+  }
+  await cacheNetworkResponse(request);
 }
 
 const putInCache = async (request, response) => {
@@ -39,10 +59,10 @@ const putInCache = async (request, response) => {
   await cache.put(request, response);
 };
 
-async function cacheNetworkResponse(event) {
+async function cacheNetworkResponse(request) {
   try {
-    const responseFromNetwork = await fetch(event.request);
-    await putInCache(event.request, responseFromNetwork.clone());
+    const responseFromNetwork = await fetch(request);
+    await putInCache(request, responseFromNetwork.clone());
     return responseFromNetwork;
   } catch {
     // the only way you should be able to get here is if:
@@ -51,8 +71,9 @@ async function cacheNetworkResponse(event) {
     // 3. the user refreshes
     //
     // if that somehow all happens, fall back to the cache.
-    console.log("you got to the legendary rare fallback scenario! congrats.");
-    return await caches.match(event.request);
+    return await caches.match(request, {
+      cacheName: "v2",
+    });
 
     // if that fails, well screw you :)
   }
@@ -65,8 +86,10 @@ let env = null;
 // get the remote hash
 async function getRemoteHash() {
   if (hash == null) {
-    // TODO: what happens if the server is unreachable???
-    const res = await (await fetch("/api/currentHash")).json();
+    // timeout after 5 seconds, assume offline
+    const res = await (
+      await fetch("/api/currentHash", { signal: AbortSignal.timeout(5000) })
+    ).json();
     hash = res.hash;
     env = res.env;
     console.log("remote hash is", hash);
@@ -153,11 +176,11 @@ async function storeLocalHash(value) {
 }
 
 let offline = false;
-let hasMessaged = false;
+let oldMessage = null;
 
 function log(message) {
-  if (!hasMessaged) {
-    hasMessaged = true;
+  if (oldMessage == null) {
+    oldMessage = message;
     console.log(message);
   }
 }
@@ -207,4 +230,13 @@ async function shouldUseCache() {
 function isApiRequest(event) {
   const url = event.request.url;
   return url.includes("/api");
+}
+
+/**
+ *
+ * @param {FetchEvent} event
+ */
+function isSWStatusRequest(event) {
+  const url = event.request.url;
+  return url.includes("/swstatus");
 }
