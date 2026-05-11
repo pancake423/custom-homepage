@@ -48,6 +48,15 @@ class PropertyValidator {
     }
     return this;
   }
+
+  isInLength(min, max) {
+    if (this.value.length < min || this.value.length > max) {
+      throw new Error(
+        `${this.prop} must be between ${min} and ${max} characters long.`,
+      );
+    }
+    return this;
+  }
 }
 
 /**

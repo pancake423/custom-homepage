@@ -115,7 +115,7 @@ export function register(user, pass) {
     };
   } catch (e) {
     return {
-      error: e.message,
+      error: `Username '${user}' is already in use.`,
       token: null,
       status: 422,
     };
@@ -141,10 +141,37 @@ function getUserId(token) {
   return res.id;
 }
 
+export function status(token) {
+  if (token == undefined || token == null) {
+    return {
+      username: null,
+      loggedIn: false,
+      message: "Not logged in.",
+    };
+  }
+
+  const id = getUserId(token);
+  if (id === null) {
+    return {
+      username: null,
+      loggedIn: false,
+      message: "Not logged in.",
+    };
+  }
+
+  const res = db.prepare(`SELECT username from users WHERE id = ?`).get(id);
+
+  return {
+    username: res.username,
+    loggedIn: true,
+    message: `Logged in as ${res.username}.`,
+  };
+}
+
 /**
  * @typedef SaveResponse
  * @prop {string|null} error - the error message, or null if no error.
- * @prop {int} response - the HTTP status response code.
+ * @prop {int} status - the HTTP status response code.
  */
 
 /**
@@ -158,9 +185,9 @@ function getUserId(token) {
 export function save(token, slot, contents) {
   // authenticate user based on token
   const id = getUserId(token);
-  if (token === null) {
+  if (id === null) {
     return {
-      error: "Not authenticated",
+      error: "Not authenticated.",
       status: 401,
     };
   }
@@ -209,11 +236,10 @@ export function save(token, slot, contents) {
 export function get(token, slot) {
   // authenticate user based on token
   const id = getUserId(token);
-  if (token === null) {
+  if (id === null) {
     return {
-      error: "Not authenticated",
+      error: "Not authenticated.",
       status: 401,
-      data: null,
     };
   }
 

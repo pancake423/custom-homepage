@@ -1,0 +1,103 @@
+// code stolen from https://evanhahn.com/javascript-compression-streams-api-with-strings/
+/**
+ * Convert a string to its UTF-8 bytes and compress it.
+ *
+ * @param {string} str
+ * @returns {Promise<Uint8Array>}
+ */
+async function compress(str) {
+  // Convert the string to a byte stream.
+  const stream = new Blob([str]).stream();
+
+  // Create a compressed stream.
+  const compressedStream = stream.pipeThrough(new CompressionStream("gzip"));
+
+  // Read all the bytes from this stream.
+  const chunks = [];
+  for await (const chunk of compressedStream) {
+    chunks.push(chunk);
+  }
+  return await concatUint8Arrays(chunks);
+}
+
+/**
+ * Decompress bytes into a UTF-8 string.
+ *
+ * @param {Uint8Array} compressedBytes
+ * @returns {Promise<string>}
+ */
+async function decompress(compressedBytes) {
+  // Convert the bytes to a stream.
+  const stream = new Blob([compressedBytes]).stream();
+
+  // Create a decompressed stream.
+  const decompressedStream = stream.pipeThrough(
+    new DecompressionStream("gzip"),
+  );
+
+  // Read all the bytes from this stream.
+  const chunks = [];
+  for await (const chunk of decompressedStream) {
+    chunks.push(chunk);
+  }
+  const stringBytes = await concatUint8Arrays(chunks);
+
+  // Convert the bytes to a string.
+  return new TextDecoder().decode(stringBytes);
+}
+
+/**
+ * Combine multiple Uint8Arrays into one.
+ *
+ * @param {ReadonlyArray<Uint8Array>} uint8arrays
+ * @returns {Promise<Uint8Array>}
+ */
+async function concatUint8Arrays(uint8arrays) {
+  const blob = new Blob(uint8arrays);
+  const buffer = await blob.arrayBuffer();
+  return new Uint8Array(buffer);
+}
+
+const EXCLUDED_KEYS = ["last-modified", "content-hash"];
+
+/**
+ * compresses the contents of localStorage into a compressed, hex-encoded
+ * string payload for saving to the server.
+ *
+ * @returns {string}
+ */
+export async function exportLocalStorage() {
+  const out = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (EXCLUDED_KEYS.includes(key)) {
+      continue;
+    }
+    const value = localStorage.getItem(key);
+    out[key] = value;
+  }
+
+  return (await compress(JSON.stringify(out))).toHex();
+}
+
+/**
+ * loads the contents of a compressed/hex encoded payload into localStorage.
+ *
+ * @param {string} input
+ */
+export async function importLocalStorage(input) {
+  const data = JSON.parse(await decompress(Uint8Array.fromHex(input)));
+
+  // ensure that EXCLUDED_KEYS entries are preserved
+  const safe = {};
+  for (const key of EXCLUDED_KEYS) {
+    safe[key] = localStorage.getItem(key);
+  }
+  localStorage.clear();
+  for (const [key, value] of Object.entries(data)) {
+    localStorage.setItem(key, value);
+  }
+  for (const [key, value] of Object.entries(safe)) {
+    localStorage.setItem(key, value);
+  }
+}

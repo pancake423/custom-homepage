@@ -7,6 +7,7 @@ import DuckGame from "./components/DuckGame.js";
 import JettyJeeve from "./components/JettyJeeve.js";
 import NotesPage from "./components/notes/NotesPage.js";
 import HistoryManager from "./components/color/HistoryManager.js";
+import CloudSync from "./components/cloud/CloudSync.js";
 
 window.addEventListener("DOMContentLoaded", async () => {
   await registerServiceWorker();
@@ -29,7 +30,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   const notes = new NotesPage("Notes");
-  const navbar = new Navbar(homepage, notes);
+  const cloud = new CloudSync();
+  const navbar = new Navbar(homepage, notes, cloud);
   await homepage.loadPageSettings();
   navbar.navigate(homepage);
 });
