@@ -150,16 +150,26 @@ window.debugEndpoint = async (url, method, body) => {
  * @param {string} tagName- the element's tag.
  * @param {string[]} classList- list of the element's CSS classes.
  * @param {HTMLElement|null} parent - if provided, the parent element to append this element to.
+ * @param {object} properties - HTML properties to set on this object (ie innerText).
  *
  * @returns {HTMLElement} - the newly created element.
  */
-export function create(tagName = "div", classList = [], parent = null) {
+export function create(
+  tagName = "div",
+  classList = [],
+  parent = null,
+  properties = {},
+) {
   const node = document.createElement(tagName);
   for (const className of classList) {
     node.classList.add(className);
   }
   if (parent !== null) {
     parent.appendChild(node);
+  }
+
+  for (const [key, value] of Object.entries(properties)) {
+    node[key] = value;
   }
 
   return node;

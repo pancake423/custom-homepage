@@ -19,12 +19,21 @@ import { exportLocalStorage } from "./export.js";
 export default class CloudSync extends Page {
   constructor() {
     super("Cloud");
+    this.panel = create("div", ["cloud-panel"], this.base);
 
-    this.userText = create("p", [], this.base);
+    this.userText = create("p", [], this.panel);
     this.loggedIn = false;
     this.status().then((data) => {
       this.userText.innerHTML = data.message;
       this.loggedIn = data.loggedIn;
+    });
+
+    this.loginForm = create("div", ["cloud-login-panel"], this.panel);
+    this.username = create("input", [], this.loginForm);
+    this.password = create("input", [], this.loginForm);
+    this.login = create("button", [], this.loginForm, { innerText: "login" });
+    this.register = create("button", [], this.loginForm, {
+      innerText: "register",
     });
 
     // run a background task every minute that checks for changes and tries to sync to the server
@@ -47,25 +56,28 @@ export default class CloudSync extends Page {
     return !data.offline;
   }
 
-  async login() {
+  async login(username, password) {
     const res = await sendJSON("/api/login", "POST", {
-      username: null,
-      password: null,
+      username: username,
+      password: password,
     });
     const data = await res.json();
+    console.log(data);
   }
 
   async logout() {
     const res = await sendJSON("/api/logout", "POST", {});
     const data = await res.json();
+    console.log(data);
   }
 
-  async register() {
+  async register(username, password) {
     const res = await sendJSON("/api/register", "POST", {
-      username: null,
-      password: null,
+      username: username,
+      password: password,
     });
     const data = await res.json();
+    console.log(data);
   }
 
   async status() {
@@ -79,6 +91,7 @@ export default class CloudSync extends Page {
       data: exportLocalStorage(),
     });
     const data = await res.json();
+    console.log(data);
   }
 
   async getData(slot = 0) {
@@ -90,5 +103,3 @@ export default class CloudSync extends Page {
     return data.data;
   }
 }
-
-window.CloudSync = CloudSync;
