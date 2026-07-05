@@ -1,0 +1,35 @@
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flex-self-bottom {
+    margin-top: auto;
+}
+
+.flex-self-right {
+    margin-left: auto;
+}
+
+.space-evenly {
+    justify-content: space-evenly;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.width-100pct {
+    width: 100%;
+}
+
+.gap-1 {
+    gap: 1rem;
+}

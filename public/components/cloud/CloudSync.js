@@ -19,22 +19,87 @@ import { exportLocalStorage } from "./export.js";
 export default class CloudSync extends Page {
   constructor() {
     super("Cloud");
-    this.panel = create("div", ["cloud-panel"], this.base);
+    this.panel = create("div", ["cloud-panel", "flex-col"], this.base);
 
-    this.userText = create("p", [], this.panel);
+    this.loginForm = create(
+      "div",
+      ["cloud-login-panel", "flex-col", "flex-self-bottom"],
+      this.panel,
+    );
+    this.statusPage = create(
+      "div",
+      ["cloud-login-panel", "flex-col", "flex-self-bottom"],
+      //  this.panel,
+    );
+
+    this.userText = create("p", [], this.statusPage);
     this.loggedIn = false;
     this.status().then((data) => {
       this.userText.innerHTML = data.message;
       this.loggedIn = data.loggedIn;
     });
 
-    this.loginForm = create("div", ["cloud-login-panel"], this.panel);
-    this.username = create("input", [], this.loginForm);
-    this.password = create("input", [], this.loginForm);
-    this.login = create("button", [], this.loginForm, { innerText: "login" });
-    this.register = create("button", [], this.loginForm, {
+    create("h1", [], this.loginForm, { innerText: "Cloud Sync" });
+
+    const r1 = create("div", ["flex-row", "gap-1"], this.loginForm);
+    const r2 = create("div", ["flex-row", "gap-1"], this.loginForm);
+    const r3 = create(
+      "div",
+      ["flex-row", "justify-end", "width-100pct"],
+      this.loginForm,
+    );
+
+    create("p", ["cloud-disclaimer"], this.loginForm, {
+      innerText:
+        "Disclaimer: the security on this website was made as a hobby project " +
+        "by some random guy. I tried my best, but don't use your bank account password or anything.",
+    });
+
+    const r4 = create(
+      "div",
+      ["flex-row", "flex-self-bottom", "space-evenly", "width-100pct"],
+      this.loginForm,
+    );
+
+    const ulabel = create("label", [], r1, {
+      htmlFor: "username",
+      innerText: "username: ",
+    });
+    const plabel = create("label", [], r2, {
+      htmlFor: "password",
+      innerText: "password: ",
+    });
+    const vlabel = create("label", [], r3, {
+      htmlFor: "visibility",
+      innerText: "show password: ",
+    });
+    this.username = create("input", [], r1, {
+      name: "username",
+      type: "text",
+      required: true,
+    });
+    this.password = create("input", [], r2, {
+      name: "password",
+      type: "password",
+      required: true,
+    });
+    this.showPass = create("input", [], r3, {
+      name: "visibility",
+      type: "checkbox",
+    });
+    this.login = create("button", [], r4, { innerText: "login" });
+    this.register = create("button", [], r4, {
       innerText: "register",
     });
+
+    // change type of password element on toggle
+    this.showPass.onchange = () => {
+      if (this.showPass.checked) {
+        this.password.type = "text";
+      } else {
+        this.password.type = "password";
+      }
+    };
 
     // run a background task every minute that checks for changes and tries to sync to the server
     window.setInterval(() => this.saveIfNeeded(), 60000);

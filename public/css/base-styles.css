@@ -1,0 +1,26 @@
+/* base styling applied to elements. */
+input,
+button {
+    box-sizing: border-box;
+    padding: 0.5rem;
+    outline: none;
+    margin: 0.5rem;
+    font-size: 1rem;
+}
+
+input {
+    border: 1px solid #ddd;
+    color: 1px solid #555;
+}
+
+button {
+    background-color: steelblue;
+    color: white;
+    border-radius: 0.5rem;
+    min-width: 6rem;
+    border: none;
+}
+
+button:hover {
+    background-color: #5299d3;
+}
