@@ -59,7 +59,7 @@ export function login(user, pass) {
 
   if (res === undefined) {
     return {
-      error: "invalid username",
+      error: "Invalid credentials.",
       token: null,
       status: 401,
     };
@@ -68,7 +68,7 @@ export function login(user, pass) {
   // verify the hash of their salted password
   if (crypto.hash(pass + res.salt) !== res.hash) {
     return {
-      error: "invalid password",
+      error: "Invalid credentials.",
       token: null,
       status: 401,
     };
@@ -115,7 +115,7 @@ export function register(user, pass) {
     };
   } catch (e) {
     return {
-      error: `Username '${user}' is already in use.`,
+      error: `That username is taken.`,
       token: null,
       status: 422,
     };

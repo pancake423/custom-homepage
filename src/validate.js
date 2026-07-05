@@ -10,7 +10,7 @@ export default class Validator {
 
   exists(prop) {
     if (this.obj[prop] == undefined) {
-      throw new Error(`${prop} is a required field.`);
+      throw new Error(`${prop} is required.`);
     }
     return new PropertyValidator(this.obj, prop);
   }

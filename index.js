@@ -66,9 +66,7 @@ app.post(
     }
     res.status(info.status).json({
       message:
-        info.error == null
-          ? "account created successfully."
-          : "Error: " + info.error,
+        info.error == null ? "account created successfully." : info.error,
     });
   },
 );
@@ -85,8 +83,7 @@ app.post(
       res.cookie("token", info.token, TOKEN_COOKIE_OPTS);
     }
     res.status(info.status).json({
-      message:
-        info.error == null ? "logged in successfully." : "Error: " + info.error,
+      message: info.error == null ? "Logged in successfully." : info.error,
     });
   },
 );
@@ -94,7 +91,7 @@ app.post(
 app.post("/api/logout", (req, res) => {
   // expire the user's token
   res.cookie("token", "", { maxAge: -1 });
-  res.json({ message: "logged out successfully." });
+  res.json({ message: "Logged out successfully." });
 });
 
 app.post(

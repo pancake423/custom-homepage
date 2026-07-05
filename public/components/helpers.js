@@ -129,7 +129,7 @@ export async function loadImageBitmap(texturePath) {
 export async function sendJSON(url, method, body) {
   return await fetch(url, {
     method: method,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(body),
   });
 }
@@ -173,6 +173,16 @@ export function create(
   }
 
   return node;
+}
+
+/**
+ * attempts to get a useful error message from an API response.
+ *
+ * @param {*} responseObject
+ * @returns
+ */
+export function errorMessage(responseObject) {
+  return responseObject.message ?? responseObject.error ?? "Unknown error";
 }
 
 /**

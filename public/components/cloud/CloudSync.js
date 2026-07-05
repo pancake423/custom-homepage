@@ -1,6 +1,7 @@
-import { create, sendJSON } from "../helpers.js";
+import { create, errorMessage } from "../helpers.js";
 import Page from "../Page.js";
-import { exportLocalStorage } from "./export.js";
+import CloudApi from "./CloudApi.js";
+import ErrorToast from "./ErrorToast.js";
 
 /**
  * general goals for cloud sync:
@@ -34,7 +35,7 @@ export default class CloudSync extends Page {
 
     this.userText = create("p", [], this.statusPage);
     this.loggedIn = false;
-    this.status().then((data) => {
+    CloudApi.status().then((data) => {
       this.userText.innerHTML = data.message;
       this.loggedIn = data.loggedIn;
     });
@@ -87,22 +88,58 @@ export default class CloudSync extends Page {
       name: "visibility",
       type: "checkbox",
     });
-    this.login = create("button", [], r4, { innerText: "login" });
-    this.register = create("button", [], r4, {
+    this.loginButton = create("button", [], r4, { innerText: "log in" });
+    this.registerButton = create("button", [], r4, {
       innerText: "register",
     });
 
-    // change type of password element on toggle
-    this.showPass.onchange = () => {
-      if (this.showPass.checked) {
-        this.password.type = "text";
-      } else {
-        this.password.type = "password";
-      }
-    };
+    this.showPass.onchange = () => this.togglePasmessageswordVisibility();
+    this.loginButton.onclick = () => this.login();
+    this.registerButton.onclick = () => this.register();
 
     // run a background task every minute that checks for changes and tries to sync to the server
     window.setInterval(() => this.saveIfNeeded(), 60000);
+  }
+
+  getLoginData() {
+    const format = (v) => {
+      const stripped = v.trim();
+      return stripped == "" ? null : stripped;
+    };
+    return {
+      username: format(this.username.value),
+      password: format(this.password.value),
+    };
+  }
+
+  togglePasswordVisibility() {
+    if (this.showPass.checked) {
+      this.password.type = "text";
+    } else {
+      this.password.type = "password";
+    }
+  }
+
+  async login() {
+    const res = await CloudApi.login(this.getLoginData());
+    if (res.status !== 200) {
+      ErrorToast.notify("Failed to log in: " + errorMessage(res), 5);
+      return false;
+    }
+    // TODO: handle login (switch to the correct panel, check for sync data, etc.)
+    console.log(res);
+    return true;
+  }
+
+  async register() {
+    const res = await CloudApi.register(this.getLoginData());
+    if (res.status !== 201) {
+      ErrorToast.notify("Failed to register: " + errorMessage(res), 3);
+      return false;
+    }
+    // TODO: handle register (switch to the correct panel, create sync data, etc.)
+    console.log(res);
+    return true;
   }
 
   async saveIfNeeded() {
@@ -112,59 +149,5 @@ export default class CloudSync extends Page {
     // if we do, send our current updated content to the server.
     // make a request to the server and get its timestamp
     // if the server has newer content than us, load it.
-  }
-
-  async online() {
-    const res = await sendJSON("/swstatus", "POST", {});
-    const data = await res.json();
-
-    return !data.offline;
-  }
-
-  async login(username, password) {
-    const res = await sendJSON("/api/login", "POST", {
-      username: username,
-      password: password,
-    });
-    const data = await res.json();
-    console.log(data);
-  }
-
-  async logout() {
-    const res = await sendJSON("/api/logout", "POST", {});
-    const data = await res.json();
-    console.log(data);
-  }
-
-  async register(username, password) {
-    const res = await sendJSON("/api/register", "POST", {
-      username: username,
-      password: password,
-    });
-    const data = await res.json();
-    console.log(data);
-  }
-
-  async status() {
-    const res = await sendJSON("/api/status", "POST", {});
-    return await res.json();
-  }
-
-  async saveData(slot = 0) {
-    const res = await sendJSON("/api/saveData", "POST", {
-      slot: slot,
-      data: exportLocalStorage(),
-    });
-    const data = await res.json();
-    console.log(data);
-  }
-
-  async getData(slot = 0) {
-    const res = await sendJSON("/api/getData", "POST", {
-      slot: slot,
-    });
-    const data = await res.json();
-
-    return data.data;
   }
 }

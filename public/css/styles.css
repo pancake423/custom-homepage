@@ -709,3 +709,20 @@ p {
     text-justify: auto;
     margin-top: 1rem;
 }
+
+.error-toast {
+    background-color: indianred;
+    color: white;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    position: absolute;
+    left: 50vw;
+    top: 1rem;
+    transition-duration: 0.25s;
+    transform: translate(-50%, 0);
+}
+
+.error-toast-hidden {
+    transform: translate(-50%, calc(-100% - 6rem));
+}
