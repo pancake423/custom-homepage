@@ -47,6 +47,10 @@ p {
     top: 0;
 }
 
+.red {
+    color: indianred;
+}
+
 .page-hide {
     display: none !important;
 }
@@ -692,6 +696,7 @@ p {
     height: 50vh;
     padding: 0.5rem;
     box-sizing: border-box;
+    min-width: min(100%, 20rem);
 }
 
 .cloud-login-panel {

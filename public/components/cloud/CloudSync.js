@@ -29,16 +29,13 @@ export default class CloudSync extends Page {
     );
     this.statusPage = create(
       "div",
-      ["cloud-login-panel", "flex-col", "flex-self-bottom"],
-      //  this.panel,
+      ["cloud-login-panel", "flex-col", "flex-self-bottom", "page-hide"],
+       this.panel,
     );
 
-    this.userText = create("p", [], this.statusPage);
+
+    this.userText = create("b", ["red"], create("p", [], this.statusPage, {innerText: "Logged in as "}));
     this.loggedIn = false;
-    CloudApi.status().then((data) => {
-      this.userText.innerHTML = data.message;
-      this.loggedIn = data.loggedIn;
-    });
 
     create("h1", [], this.loginForm, { innerText: "Cloud Sync" });
 
@@ -52,8 +49,8 @@ export default class CloudSync extends Page {
 
     create("p", ["cloud-disclaimer"], this.loginForm, {
       innerText:
-        "Disclaimer: the security on this website was made as a hobby project " +
-        "by some random guy. I tried my best, but don't use your bank account password or anything.",
+        "Disclaimer: the security on this website was made as a hobby project. " +
+        "I tried my best, but don't use your bank account password or anything.",
     });
 
     const r4 = create(
@@ -92,13 +89,17 @@ export default class CloudSync extends Page {
     this.registerButton = create("button", [], r4, {
       innerText: "register",
     });
+    this.logoutButton = create("button", [], this.statusPage, { innerText: "log out" });
 
     this.showPass.onchange = () => this.togglePasmessageswordVisibility();
     this.loginButton.onclick = () => this.login();
+    this.logoutButton.onclick = () => this.logout();
     this.registerButton.onclick = () => this.register();
 
     // run a background task every minute that checks for changes and tries to sync to the server
     window.setInterval(() => this.saveIfNeeded(), 60000);
+
+    this.checkLoginStatus();
   }
 
   getLoginData() {
@@ -120,6 +121,21 @@ export default class CloudSync extends Page {
     }
   }
 
+  async checkLoginStatus() {
+    const data = await CloudApi.status();
+    this.userText.innerHTML = data.username;
+    this.loggedIn = data.loggedIn;
+    console.log(data);
+
+    if (this.loggedIn) {
+      this.loginForm.classList.add("page-hide");
+      this.statusPage.classList.remove("page-hide");
+      return;
+    }
+    this.loginForm.classList.remove("page-hide");
+    this.statusPage.classList.add("page-hide");
+  }
+
   async login() {
     const res = await CloudApi.login(this.getLoginData());
     if (res.status !== 200) {
@@ -128,7 +144,13 @@ export default class CloudSync extends Page {
     }
     // TODO: handle login (switch to the correct panel, check for sync data, etc.)
     console.log(res);
+    await this.checkLoginStatus();
     return true;
+  }
+
+  async logout() {
+    await CloudApi.logout();
+    await this.checkLoginStatus();
   }
 
   async register() {
