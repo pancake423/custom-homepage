@@ -183,7 +183,7 @@ export default class CloudSync extends Page {
     const contents = await exportLocalStorage();
     const hash = await getContentHash(contents);
 
-    const timestamp = parseInt(localStorage.getItem("timestamp")) ?? 0;
+    const timestamp = parseInt(localStorage.getItem("timestamp") ?? 0);
     const serverTimestamp = (await CloudApi.status()).lastUpdated[0] ?? 0;
 
     console.log(hash, timestamp, serverTimestamp);
@@ -192,7 +192,7 @@ export default class CloudSync extends Page {
     let remoteHasUpdate = serverTimestamp > timestamp;
 
     if (localContentHasUpdate && remoteHasUpdate) {
-      const preferRemote = confirm(
+      const preferRemote = timestamp == 0 ? true : confirm(
         "The save on your local machine conflicts with the save on the cloud. Do you want to use the save on the cloud?",
       );
       if (preferRemote) {
@@ -218,7 +218,7 @@ export default class CloudSync extends Page {
       console.log("attempting to fetch remote changes.");
       const serverContents = await CloudApi.getData(0);
       await importLocalStorage(serverContents);
-      localStorage.setItem("content-hash", getContentHash(serverContents));
+      localStorage.setItem("content-hash", await getContentHash(await exportLocalStorage()));
       localStorage.setItem("timestamp", unixTimestampSeconds());
 
       // this is lazy, but the easiest way to get changes to show up on the page.

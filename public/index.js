@@ -33,5 +33,15 @@ window.addEventListener("DOMContentLoaded", async () => {
   const cloud = new CloudSync();
   const navbar = new Navbar(homepage, notes, cloud);
   await homepage.loadPageSettings();
-  navbar.navigate(homepage);
+  switch (localStorage.getItem("page")) {
+    case "Notes":
+      navbar.navigate(notes);
+      break;
+    case "Cloud":
+      navbar.navigate(cloud);
+      break;
+    default:
+      navbar.navigate(homepage);
+      break;
+  }
 });

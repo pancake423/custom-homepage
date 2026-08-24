@@ -58,7 +58,7 @@ async function concatUint8Arrays(uint8arrays) {
   return new Uint8Array(buffer);
 }
 
-const EXCLUDED_KEYS = ["timestamp", "content-hash"];
+const EXCLUDED_KEYS = ["timestamp", "content-hash", "page"];
 
 /**
  * compresses the contents of localStorage into a compressed, hex-encoded
@@ -77,7 +77,7 @@ export async function exportLocalStorage() {
     out[key] = value;
   }
 
-  return (await compress(JSON.stringify(out))).toHex();
+  return (await compress(JSON.stringify(out, Object.keys(out).sort()))).toHex();
 }
 
 /**

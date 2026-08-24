@@ -531,7 +531,7 @@ p {
 
     border: 2px solid black;
     border-radius: 0.25rem;
-    background-image: url(assets/images/checkerboard.png);
+    background-image: url(/assets/images/checkerboard.png);
     cursor: pointer;
     background-size: contain;
     position: relative;

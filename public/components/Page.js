@@ -22,6 +22,7 @@ export default class Page {
   show() {
     this.base.classList.remove("page-hide");
     document.title = this.name;
+    localStorage.setItem("page", this.name);
   }
 
   hide() {
