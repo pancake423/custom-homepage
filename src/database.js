@@ -32,6 +32,7 @@ function initDatabases() {
       salt TEXT NOT NULL,
       iv INTEGER NOT NULL,
       data TEXT,
+      updated_at INTEGER DEFAULT (unixepoch()),
       user_id INTEGER NOT NULL,
       FOREIGN KEY (user_id)
         REFERENCES users (id)
@@ -147,6 +148,7 @@ export function status(token) {
       username: null,
       loggedIn: false,
       message: "Not logged in.",
+      lastUpdated: null,
     };
   }
 
@@ -156,6 +158,7 @@ export function status(token) {
       username: null,
       loggedIn: false,
       message: "Not logged in.",
+      lastUpdated: null,
     };
   }
 
@@ -165,6 +168,7 @@ export function status(token) {
     username: res.username,
     loggedIn: true,
     message: `Logged in as ${res.username}.`,
+    lastUpdated: lastUpdated(id),
   };
 }
 
@@ -260,4 +264,17 @@ export function get(token, slot) {
     status: 200,
     data: JSON.parse(crypto.decrypt(res.data, token, res.salt, res.iv)),
   };
+}
+
+function lastUpdated(id) {
+  const res = db
+    .prepare("SELECT updated_at, slot from saves WHERE user_id = ?")
+    .all(id)
+
+  const out = {};
+  for (const obj of res) {
+    out[obj.slot] = obj.updated_at;
+  }
+
+  return out;
 }

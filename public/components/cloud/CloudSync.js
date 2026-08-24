@@ -2,20 +2,12 @@ import { create, errorMessage } from "../helpers.js";
 import Page from "../Page.js";
 import CloudApi from "./CloudApi.js";
 import ErrorToast from "./ErrorToast.js";
-
-/**
- * general goals for cloud sync:
- * when the page loads, check if the server has newer content than we do
- *
- * periodically check for content updates and push them to the server.
- * assumption: no one will try to use the site on two devices at the same time.
- *
- * assumption: someone might make changes elsewhere, and then come back to an old tab
- * on a different device without reloading. we should check for newer changes on the server periodically.
- *
- * assumption: the user would rather the experience be seamless, with a small chance of accidental overwrites,
- * than be interrupted with prompts whenever they switch devices.
- */
+import {
+  exportLocalStorage,
+  getContentHash,
+  importLocalStorage,
+  unixTimestampSeconds,
+} from "./export.js";
 
 export default class CloudSync extends Page {
   constructor() {
@@ -30,11 +22,14 @@ export default class CloudSync extends Page {
     this.statusPage = create(
       "div",
       ["cloud-login-panel", "flex-col", "flex-self-bottom", "page-hide"],
-       this.panel,
+      this.panel,
     );
 
-
-    this.userText = create("b", ["red"], create("p", [], this.statusPage, {innerText: "Logged in as "}));
+    this.userText = create(
+      "b",
+      ["red"],
+      create("p", [], this.statusPage, { innerText: "Logged in as " }),
+    );
     this.loggedIn = false;
 
     create("h1", [], this.loginForm, { innerText: "Cloud Sync" });
@@ -89,15 +84,28 @@ export default class CloudSync extends Page {
     this.registerButton = create("button", [], r4, {
       innerText: "register",
     });
-    this.logoutButton = create("button", [], this.statusPage, { innerText: "log out" });
+    this.logoutButton = create("button", [], this.statusPage, {
+      innerText: "log out",
+    });
 
-    this.showPass.onchange = () => this.togglePasmessageswordVisibility();
+    this.syncText = create(
+      "b",
+      ["red"],
+      create("p", [], this.statusPage, { innerText: "Last synced at " }),
+    );
+
+    this.syncButton = create("button", [], this.statusPage, {
+      innerText: "sync now",
+    });
+
+    this.showPass.onchange = () => this.togglePasswordVisibility();
     this.loginButton.onclick = () => this.login();
     this.logoutButton.onclick = () => this.logout();
     this.registerButton.onclick = () => this.register();
+    this.syncButton.onclick = () => this.saveOrSyncIfNeeded();
 
-    // run a background task every minute that checks for changes and tries to sync to the server
-    window.setInterval(() => this.saveIfNeeded(), 60000);
+    // run a background task every 30s that checks for changes and tries to sync to the server
+    window.setInterval(() => this.saveOrSyncIfNeeded(), 30000);
 
     this.checkLoginStatus();
   }
@@ -130,6 +138,7 @@ export default class CloudSync extends Page {
     if (this.loggedIn) {
       this.loginForm.classList.add("page-hide");
       this.statusPage.classList.remove("page-hide");
+      await this.saveOrSyncIfNeeded();
       return;
     }
     this.loginForm.classList.remove("page-hide");
@@ -161,15 +170,60 @@ export default class CloudSync extends Page {
     }
     // TODO: handle register (switch to the correct panel, create sync data, etc.)
     console.log(res);
+    await this.checkLoginStatus();
     return true;
   }
 
-  async saveIfNeeded() {
+  async saveOrSyncIfNeeded() {
+    this.syncText.innerText = new Date().toLocaleTimeString();
+
     if (!this.loggedIn) return;
 
     // get the current hash, compare to stored hash, check if we need to update timestamp.
-    // if we do, send our current updated content to the server.
+    const contents = await exportLocalStorage();
+    const hash = await getContentHash(contents);
+
+    const timestamp = parseInt(localStorage.getItem("timestamp")) ?? 0;
+    const serverTimestamp = (await CloudApi.status()).lastUpdated[0] ?? 0;
+
+    console.log(hash, timestamp, serverTimestamp);
+
+    let localContentHasUpdate = hash != localStorage.getItem("content-hash");
+    let remoteHasUpdate = serverTimestamp > timestamp;
+
+    if (localContentHasUpdate && remoteHasUpdate) {
+      const preferRemote = confirm(
+        "The save on your local machine conflicts with the save on the cloud. Do you want to use the save on the cloud?",
+      );
+      if (preferRemote) {
+        localContentHasUpdate = false;
+      } else {
+        remoteHasUpdate = false;
+      }
+    }
+
+    if (localContentHasUpdate) {
+      console.log("attempting to save local changes.");
+      localStorage.setItem("content-hash", hash);
+      localStorage.setItem("timestamp", unixTimestampSeconds());
+
+      // if we do, send our current updated content to the server.
+      await CloudApi.saveData(0, contents);
+
+      return;
+    }
     // make a request to the server and get its timestamp
     // if the server has newer content than us, load it.
+    if (remoteHasUpdate) {
+      console.log("attempting to fetch remote changes.");
+      const serverContents = await CloudApi.getData(0);
+      await importLocalStorage(serverContents);
+      localStorage.setItem("content-hash", getContentHash(serverContents));
+      localStorage.setItem("timestamp", unixTimestampSeconds());
+
+      // this is lazy, but the easiest way to get changes to show up on the page.
+      // I am not smart enough to be more clever right now.
+      window.location.reload();
+    }
   }
 }

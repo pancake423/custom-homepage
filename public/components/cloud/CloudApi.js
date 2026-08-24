@@ -44,13 +44,13 @@ export default class CloudApi {
     return await res.json();
   }
 
-  static async saveData(slot = 0) {
+  static async saveData(slot = 0, data = null) {
     const res = await sendJSON("/api/saveData", "POST", {
       slot: slot,
-      data: exportLocalStorage(),
+      data: data ?? exportLocalStorage(),
     });
-    const data = await res.json();
-    console.log(data);
+    const outData = await res.json();
+    console.log(outData);
   }
 
   static async getData(slot = 0) {
@@ -62,3 +62,5 @@ export default class CloudApi {
     return data.data;
   }
 }
+
+window.CloudApi = CloudApi;

@@ -34,5 +34,4 @@ window.addEventListener("DOMContentLoaded", async () => {
   const navbar = new Navbar(homepage, notes, cloud);
   await homepage.loadPageSettings();
   navbar.navigate(homepage);
-  window.cloud = cloud;
 });
