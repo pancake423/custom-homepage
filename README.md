@@ -3,10 +3,19 @@
 A small website designed to mostly work offline, used as a browser homepage.
 
 It includes:
+
 - a customizable links page for quickly navigating to frequently used websites
 - a notes app
 - highly customizable color schemes
-- cross-device cloud syncing (coming soon?)
+- cross-device cloud syncing
+
+This is a hacked-together side project, so I made some choices that no sane person would make on a "real" site. 
+(just noting them for posterity and to prove I know better lol):
+
+1. chaining together a bunch of awaits on initial page load- means we have to make a bunch of sequential round trips to the server. 
+This is mitigated on subsequent page loads by caching, which I think I did a pretty good job with, but the initial page load is pretty brutal (3-4 secs).
+2. experimenting with building my own component, and switching styles multiple times throughout the project.
+3. being too lazy to re-paint components when we get updates from the cloud, and just refreshing the whole page instead
 
 # Usage
 
@@ -14,6 +23,7 @@ This project is hosted on my personal website at https://homepage.wxj.me.
 feel free to bookmark that page to use as a homepage (see **Setting a homepage** below)
 
 ## Development/Local install
+
 If you want to run the site locally, or want to develop it, follow these instructions.
 
 ```bash
@@ -40,9 +50,11 @@ The server uses some of the latest features of Node (builtin SQLite support), so
 using at least node v24.15.0 (the latest LTS release).
 
 ## Setting a homepage
+
 In your browser settings, find the homepage settings and set it to the url from above (https://homepage.wxj.me, or http://localhost:51432 for local development).
 
 ### Firefox
+
 go to `about:preferences#home`.
 
 <img src="images/screenshot-firefox.png" width = 800>
@@ -55,7 +67,7 @@ go to `chrome://settings/appearance`. turn on "show home button", and set it to 
 
 ### Other Browsers
 
- Most (all?) browsers support custom homepages. Look up specific instructions online if you're having trouble.
+Most (all?) browsers support custom homepages. Look up specific instructions online if you're having trouble.
 
 # Attributions
 
